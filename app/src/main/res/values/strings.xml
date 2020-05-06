@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PanFeed</string>
+    <string name="home_title">Pandemic News</string>
+    <string name="api_key">d478f833c84d4324b8663e8e2590d9e4</string>
+</resources>

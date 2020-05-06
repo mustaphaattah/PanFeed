@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/cardView"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardCornerRadius="8dp"
+            android:padding="16dp">
+
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+            <ImageView android:id="@+id/newsImageView"
+                       android:layout_width="match_parent"
+                       android:src="@drawable/no_img"
+                       android:scaleType="centerCrop"
+                       android:layout_height="160dp"/>
+
+            <ImageView android:id="@+id/imageShadow" android:layout_width="match_parent"
+                       android:layout_height="60dp"
+                       android:src="@drawable/shadow_bottom"
+                       android:layout_alignBottom="@+id/newsImageView"/>
+
+            <TextView android:id="@+id/sourceTv"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Source" android:padding="10dp"
+                      android:layout_alignBottom="@+id/newsImageView"
+                      android:textColor="@color/white" />
+
+            <TextView android:id="@+id/dateTv" android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:padding="10dp"
+                      android:gravity="end" android:layout_alignBottom="@+id/newsImageView"
+                      android:text="Date" android:textColor="@color/white"/>
+
+            <TextView android:id="@+id/titleTv"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Title" android:textStyle="bold"
+                      android:textSize="16dp"
+                      android:layout_below="@+id/newsImageView"
+                      android:layout_marginTop="10dp"
+                      android:layout_marginStart="10dp"
+                      android:layout_marginEnd="10dp"
+                      android:textColor="@color/black"/>
+
+            <TextView android:id="@+id/previewTV" android:layout_width="wrap_content"
+                      android:layout_height="36dp"
+                      android:text="Preview of news content"
+                      android:layout_margin="10dp"
+                      android:layout_below="@+id/titleTv"/>
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+</FrameLayout>
