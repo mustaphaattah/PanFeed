@@ -1,21 +1,44 @@
 package com.mtah.panfeed
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val toolbar: Toolbar = findViewById(R.id.toolBar)
+        setSupportActionBar(toolbar)
 
-        TODO("make splash screen with this run on a new thread")
-        Handler().postDelayed({
-            val homeIntent = Intent(this, HomeActivity::class.java)
-            startActivity(homeIntent)
-            finish()
-        }, 3000)
+        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
+        val viewPager: ViewPager = findViewById(R.id.viewPager)
+
+        tabLayout.addTab(tabLayout.newTab().setText("Global"))
+        tabLayout.addTab(tabLayout.newTab().setText("Local"))
+//        tabLayout.
+
+        val adapter = PagerAdapter(this, supportFragmentManager, tabLayout.tabCount)
+        viewPager.adapter = adapter
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                viewPager.currentItem = tab!!.position
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+
+        })
+
     }
 }

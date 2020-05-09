@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">PanFeed</string>
     <string name="home_title">Pandemic News</string>
-    <string name="api_key">d478f833c84d4324b8663e8e2590d9e4</string>
+
+    <!--    TODO: remove api key-->
+    <string name="api_key">your key here</string>
+
+    <string name="global_fragment">Global fragment</string>
+    <string name="local_fragment">Local fragment</string>
+    <string name="covid_keyword">corona</string>
+
 </resources>
