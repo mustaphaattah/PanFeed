@@ -11,6 +11,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        this.window.statusBarColor = getColor(R.color.colorPrimaryDark)
+
+
         val toolbar: Toolbar = findViewById(R.id.toolBar)
         setSupportActionBar(toolbar)
 
@@ -19,7 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         tabLayout.addTab(tabLayout.newTab().setText("Global"))
         tabLayout.addTab(tabLayout.newTab().setText("Local"))
-//        tabLayout.
 
         val adapter = PagerAdapter(this, supportFragmentManager, tabLayout.tabCount)
         viewPager.adapter = adapter

@@ -2,7 +2,6 @@
     <string name="app_name">PanFeed</string>
     <string name="home_title">Pandemic News</string>
 
-    <!--    TODO: remove api key-->
     <string name="api_key">your key here</string>
 
     <string name="global_fragment">Global fragment</string>

@@ -49,11 +49,6 @@
                       android:layout_marginEnd="10dp"
                       android:textColor="@color/black"/>
 
-            <TextView android:id="@+id/previewTV" android:layout_width="wrap_content"
-                      android:layout_height="36dp"
-                      android:text="Preview of news content"
-                      android:layout_margin="10dp"
-                      android:layout_below="@+id/titleTv"/>
         </RelativeLayout>
 
 

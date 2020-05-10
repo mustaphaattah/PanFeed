@@ -47,7 +47,6 @@ class NewsAdapter(private val articles: List<Article>
         private var newsTitle: TextView = itemView.findViewById(R.id.titleTv)
         private var newsSource: TextView = itemView.findViewById(R.id.sourceTv)
         private var newsDate: TextView = itemView.findViewById(R.id.dateTv)
-        private var newsPreview: TextView = itemView.findViewById(R.id.previewTV)
         private var newsImage: ImageView = itemView.findViewById(R.id.newsImageView)
         var cardView: CardView = itemView.findViewById(R.id.cardView)
         var newsUrl: String = ""
@@ -67,7 +66,6 @@ class NewsAdapter(private val articles: List<Article>
             newsSource.text = article.source.name
             newsDate.text = article.publishedAt
             newsDate.text = prettyDate(article.publishedAt)
-            newsPreview.text = article.description
             newsUrl = article.url
         }
 

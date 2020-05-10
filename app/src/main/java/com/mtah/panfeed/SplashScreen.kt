@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import java.lang.Exception
 import java.lang.Thread.sleep
 
@@ -14,6 +15,7 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        window.statusBarColor = getColor(R.color.colorPrimaryDark)
 
         Thread( Runnable {
             try {
