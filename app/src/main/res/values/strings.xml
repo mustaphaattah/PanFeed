@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PanFeed</string>
     <string name="home_title">Pandemic News</string>
+    <string name="shout_out">Powered by NewsApi.org</string>
 
     <string name="api_key">your key here</string>
 

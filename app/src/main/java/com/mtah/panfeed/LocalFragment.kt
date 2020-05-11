@@ -26,7 +26,7 @@ class LocalFragment : Fragment() {
 
     val TAG = "LocalFragment"
     val COVID_KEYWORD = "coronavirus"
-    val PAGE_SIZE = 100
+    val PAGE_SIZE = 50
 
     var recyclerView: RecyclerView? = null
     var swipeRefresh: SwipeRefreshLayout? = null

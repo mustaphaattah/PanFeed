@@ -26,7 +26,7 @@ class GlobalFragment : Fragment() {
     val TAG = "GlobalFragment"
     val COVID_KEYWORD = "coronavirus"
     val SORT_BY = "publishedAt"
-    private val PAGE_SIZE = 100
+    private val PAGE_SIZE = 50
     var recyclerView: RecyclerView? = null
     var swipeRefresh: SwipeRefreshLayout? = null
 
