@@ -9,7 +9,7 @@
             android:id="@+id/cardView"
             app:cardElevation="@dimen/cardview_default_elevation"
             app:cardCornerRadius="8dp"
-            android:padding="16dp">
+            android:padding="10dp">
 
         <RelativeLayout android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -44,9 +44,7 @@
                       android:text="Title" android:textStyle="bold"
                       android:textSize="16dp"
                       android:layout_below="@+id/newsImageView"
-                      android:layout_marginTop="10dp"
-                      android:layout_marginStart="10dp"
-                      android:layout_marginEnd="10dp"
+                      android:padding="10dp"
                       android:textColor="@color/black"/>
 
         </RelativeLayout>

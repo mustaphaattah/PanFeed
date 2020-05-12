@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.mtah.panfeed.adapters.PagerAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +14,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         this.window.statusBarColor = getColor(R.color.colorPrimaryDark)
-
 
         val toolbar: Toolbar = findViewById(R.id.toolBar)
         setSupportActionBar(toolbar)
@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         tabLayout.addTab(tabLayout.newTab().setText("Global"))
         tabLayout.addTab(tabLayout.newTab().setText("Local"))
 
-        val adapter = PagerAdapter(this, supportFragmentManager, tabLayout.tabCount)
+        val adapter =
+            PagerAdapter(this, supportFragmentManager, tabLayout.tabCount)
         viewPager.adapter = adapter
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{

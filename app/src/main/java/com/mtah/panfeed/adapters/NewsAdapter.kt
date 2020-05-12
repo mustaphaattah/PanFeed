@@ -1,4 +1,4 @@
-package com.mtah.panfeed
+package com.mtah.panfeed.adapters
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.mtah.panfeed.R
+import com.mtah.panfeed.ReadActivity
 import com.mtah.panfeed.api.GlideApp
 import com.mtah.panfeed.models.Article
 import org.ocpsoft.prettytime.PrettyTime

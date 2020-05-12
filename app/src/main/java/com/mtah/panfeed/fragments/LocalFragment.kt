@@ -1,4 +1,4 @@
-package com.mtah.panfeed
+package com.mtah.panfeed.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +11,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.mtah.panfeed.adapters.NewsAdapter
+import com.mtah.panfeed.api.NewsApiClient
+import com.mtah.panfeed.api.NewsInterface
+import com.mtah.panfeed.R
 import com.mtah.panfeed.models.News
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -52,7 +55,8 @@ class LocalFragment : Fragment() {
 
     fun fetchLocalNews(){
         swipeRefresh!!.isRefreshing = true
-        val request = NewsApiClient.getApi(NewsInterface::class.java)
+        val request =
+            NewsApiClient.getApi(NewsInterface::class.java)
         val country = getCountryCode()
         val call = request.getLocalNews(getString(R.string.api_key), country, COVID_KEYWORD, PAGE_SIZE)
         Log.d(TAG, "the locale code: $country")
@@ -70,7 +74,10 @@ class LocalFragment : Fragment() {
                 if (response.isSuccessful){
                     recyclerView!!.apply {
                         itemAnimator = DefaultItemAnimator()
-                        adapter = NewsAdapter(response.body()!!.articles, context)
+                        adapter = NewsAdapter(
+                            response.body()!!.articles,
+                            context
+                        )
 
                         val newsCount = (adapter as NewsAdapter).itemCount
                         Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")

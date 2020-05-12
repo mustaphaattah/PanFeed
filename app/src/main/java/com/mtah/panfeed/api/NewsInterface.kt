@@ -1,4 +1,4 @@
-package com.mtah.panfeed
+package com.mtah.panfeed.api
 
 import com.mtah.panfeed.models.News
 import org.intellij.lang.annotations.Language
@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NewsInterface {
-
+//NEWS api
     @GET("top-headlines")
     fun getLocalNews(
         @Query("apiKey") apiKey: String,
@@ -24,4 +24,5 @@ interface NewsInterface {
         @Query("pageSize") pageSize: Int,
         @Query("sortBy") sort: String
     ) : Call<News>
+
 }
