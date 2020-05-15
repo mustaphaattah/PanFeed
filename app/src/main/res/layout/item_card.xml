@@ -42,7 +42,7 @@
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:text="Title" android:textStyle="bold"
-                      android:textSize="16dp"
+                      android:textSize="16sp"
                       android:layout_below="@+id/newsImageView"
                       android:padding="10dp"
                       android:textColor="@color/black"/>
