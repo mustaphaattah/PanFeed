@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_news"
+          android:title="News"
+          android:icon="@drawable/ic_news"/>
+
+    <item android:id="@+id/nav_cases"
+          android:title="Cases"
+          android:icon="@drawable/ic_chart_line"/>
+
+    <item android:id="@+id/nav_saved"
+          android:title="Saved"
+          android:icon="@drawable/ic_bookmark_black_24dp"/>
+</menu>

@@ -2,10 +2,17 @@ package com.mtah.panfeed
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.mtah.panfeed.adapters.PagerAdapter
+import com.mtah.panfeed.fragments.CasesFragment
+import com.mtah.panfeed.fragments.NewsFragment
+import com.mtah.panfeed.fragments.SavedFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,34 +22,33 @@ class MainActivity : AppCompatActivity() {
 
         this.window.statusBarColor = getColor(R.color.colorPrimaryDark)
 
-        val toolbar: Toolbar = findViewById(R.id.toolBar)
-        setSupportActionBar(toolbar)
+//
+//        val toolbar: Toolbar = findViewById(R.id.toolBar)
+//        setSupportActionBar(toolbar)
 
-        val tabLayout: TabLayout = findViewById(R.id.tabLayout)
-        val viewPager: ViewPager = findViewById(R.id.viewPager)
+        //set default view to news fragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, NewsFragment())
+            .commit()
 
-        tabLayout.addTab(tabLayout.newTab().setText("Global"))
-        tabLayout.addTab(tabLayout.newTab().setText("Local"))
+        //bottom navigation bar
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigation.setOnNavigationItemSelectedListener(navigationListener)
 
-        val adapter =
-            PagerAdapter(this, supportFragmentManager, tabLayout.tabCount)
-        viewPager.adapter = adapter
+    }
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewPager.currentItem = tab!!.position
-            }
+    //bottom navigation bar Listener
+    private var navigationListener =  BottomNavigationView.OnNavigationItemSelectedListener{ item ->
+        var selectedFragment: Fragment = NewsFragment()
+        when (item.itemId) {
+            R.id.nav_news -> selectedFragment = NewsFragment()
+            R.id.nav_cases -> selectedFragment = CasesFragment()
+            R.id.nav_saved -> selectedFragment = SavedFragment()
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, selectedFragment)
+            .commit()
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-
-        })
-
+        true
     }
 }

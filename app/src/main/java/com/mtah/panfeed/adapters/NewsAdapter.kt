@@ -24,7 +24,7 @@ class NewsAdapter(private val articles: List<Article>
                   , private val context: Context
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false)
         return NewsViewHolder(view)
     }
 
@@ -72,10 +72,10 @@ class NewsAdapter(private val articles: List<Article>
         }
 
         fun prettyDate(publishTime: String): String{
-            var prettyTime: PrettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
-            var time: String = ""
+            var prettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
+            var time = ""
             try {
-                var dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
+                var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
                 var date = dateFormat.parse(publishTime)
                 time = prettyTime.format(date)
             } catch (e: Exception){
