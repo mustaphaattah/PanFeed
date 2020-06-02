@@ -20,8 +20,8 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NewsAdapter(private val articles: List<Article>
-                  , private val context: Context
+class NewsAdapter(var articles: MutableList<Article>,
+                  val clickListener: OnNewsClickListener
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false)
@@ -33,16 +33,12 @@ class NewsAdapter(private val articles: List<Article>
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.bind(articles[position])
-        holder.cardView.setOnClickListener {
-            if (holder.newsUrl.isNullOrEmpty()) {
-                Toast.makeText(context, "Cannot open this news link", Toast.LENGTH_SHORT)
-            } else {
-                var readIntent = Intent(context, ReadActivity::class.java)
-                readIntent.putExtra("url", holder.newsUrl)
-                context.startActivity(readIntent)
-            }
-        }
+        holder.bind(articles[position], clickListener)
+    }
+
+    fun addAllArticles(responseArticles: List<Article>){
+        articles.addAll(responseArticles)
+        notifyDataSetChanged()
     }
 
     class NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -54,7 +50,7 @@ class NewsAdapter(private val articles: List<Article>
         var newsUrl: String = ""
 
 
-        fun bind(article: Article) {
+        fun bind(article: Article, onClick: OnNewsClickListener) {
 
             GlideApp.with(itemView)
                 .load(article.urlToImage)
@@ -69,6 +65,10 @@ class NewsAdapter(private val articles: List<Article>
             newsDate.text = article.publishedAt
             newsDate.text = prettyDate(article.publishedAt)
             newsUrl = article.url
+
+            itemView.setOnClickListener {
+                onClick.onItemClick(article, adapterPosition)
+            }
         }
 
         fun prettyDate(publishTime: String): String{
@@ -85,6 +85,10 @@ class NewsAdapter(private val articles: List<Article>
             return time
         }
 
+    }
+
+    interface OnNewsClickListener {
+        fun onItemClick(article: Article, position: Int)
     }
 
 }

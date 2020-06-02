@@ -50,11 +50,8 @@ class NewsFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {
 
             }
-
-
         })
 
         return view
     }
-
 }
