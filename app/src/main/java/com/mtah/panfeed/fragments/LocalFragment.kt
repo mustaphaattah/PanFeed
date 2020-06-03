@@ -100,7 +100,6 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     }
 
     override fun onItemClick(article: Article, position: Int) {
-//        TODO("Not yet implemented")
         var readIntent = Intent(context, ReadActivity::class.java)
         readIntent.putExtra("title", article.title)
         readIntent.putExtra("url", article.url)

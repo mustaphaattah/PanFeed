@@ -36,17 +36,16 @@ class NewsAdapter(var articles: MutableList<Article>,
         holder.bind(articles[position], clickListener)
     }
 
-    fun addAllArticles(responseArticles: List<Article>){
+    fun addAllArticles(responseArticles: List<Article>) {
         articles.addAll(responseArticles)
         notifyDataSetChanged()
     }
 
-    class NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var newsTitle: TextView = itemView.findViewById(R.id.titleTv)
         private var newsSource: TextView = itemView.findViewById(R.id.sourceTv)
         private var newsDate: TextView = itemView.findViewById(R.id.dateTv)
         private var newsImage: ImageView = itemView.findViewById(R.id.newsImageView)
-        var cardView: CardView = itemView.findViewById(R.id.cardView)
         var newsUrl: String = ""
 
 
@@ -69,16 +68,18 @@ class NewsAdapter(var articles: MutableList<Article>,
             itemView.setOnClickListener {
                 onClick.onItemClick(article, adapterPosition)
             }
+
+
         }
 
-        fun prettyDate(publishTime: String): String{
+        private fun prettyDate(publishTime: String): String {
             var prettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
             var time = ""
             try {
                 var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
                 var date = dateFormat.parse(publishTime)
                 time = prettyTime.format(date)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("Adapter", e.localizedMessage)
                 e.printStackTrace()
             }
@@ -90,5 +91,4 @@ class NewsAdapter(var articles: MutableList<Article>,
     interface OnNewsClickListener {
         fun onItemClick(article: Article, position: Int)
     }
-
 }

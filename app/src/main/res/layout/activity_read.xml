@@ -16,6 +16,7 @@
                 app:contentScrim="@color/colorPrimary"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:expandedTitleTextAppearance="@style/ExpandedTextSize"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout

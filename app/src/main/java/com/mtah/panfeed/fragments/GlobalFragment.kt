@@ -3,10 +3,8 @@ package com.mtah.panfeed.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,7 +39,6 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     private lateinit var newsAdapter: NewsAdapter
     lateinit var recyclerView: RecyclerView
     lateinit var swipeRefresh: SwipeRefreshLayout
-    var articles = mutableListOf<Article>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +50,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         recyclerView = view.findViewById(R.id.globalRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        newsAdapter = NewsAdapter(articles, this)
+        newsAdapter = NewsAdapter(mutableListOf(), this)
         recyclerView.adapter = newsAdapter
 
         swipeRefresh = view.findViewById(R.id.globalRefresh)
@@ -105,12 +102,11 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     }
 
     override fun onItemClick(article: Article, position: Int) {
-//        TODO("Not yet implemented")
         var readIntent = Intent(context, ReadActivity::class.java)
         readIntent.putExtra("title", article.title)
         readIntent.putExtra("url", article.url)
         readIntent.putExtra("image", article.urlToImage)
-        Log.d(TAG, "Article Clicked: ${articles[position]}")
+        Log.d(TAG, "---------------------Article $position Clicked: ${article.title}========================================")
         startActivity(readIntent)
     }
 }

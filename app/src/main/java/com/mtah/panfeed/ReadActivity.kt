@@ -81,9 +81,8 @@ class ReadActivity : AppCompatActivity() {
             newsWebView.settings.loadsImagesAutomatically = true
             newsWebView.settings.javaScriptEnabled = true
             newsWebView.webViewClient = WebViewClient()
-            newsUrl = newsIntent.getStringExtra("url")
+            newsUrl = newsIntent.getStringExtra("url")!!
             newsWebView.loadUrl(newsUrl)
-
         } else {
             Toast.makeText(this, "No news link", Toast.LENGTH_SHORT)
         }
