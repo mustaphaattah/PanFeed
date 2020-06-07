@@ -20,8 +20,8 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NewsAdapter(private val articles: List<Article>
-                  , private val context: Context
+class NewsAdapter(var articles: MutableList<Article>,
+                  val clickListener: OnNewsClickListener
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false)
@@ -33,28 +33,23 @@ class NewsAdapter(private val articles: List<Article>
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.bind(articles[position])
-        holder.cardView.setOnClickListener {
-            if (holder.newsUrl.isNullOrEmpty()) {
-                Toast.makeText(context, "Cannot open this news link", Toast.LENGTH_SHORT)
-            } else {
-                var readIntent = Intent(context, ReadActivity::class.java)
-                readIntent.putExtra("url", holder.newsUrl)
-                context.startActivity(readIntent)
-            }
-        }
+        holder.bind(articles[position], clickListener)
     }
 
-    class NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    fun addAllArticles(responseArticles: List<Article>) {
+        articles.addAll(responseArticles)
+        notifyDataSetChanged()
+    }
+
+    class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var newsTitle: TextView = itemView.findViewById(R.id.titleTv)
         private var newsSource: TextView = itemView.findViewById(R.id.sourceTv)
         private var newsDate: TextView = itemView.findViewById(R.id.dateTv)
         private var newsImage: ImageView = itemView.findViewById(R.id.newsImageView)
-        var cardView: CardView = itemView.findViewById(R.id.cardView)
         var newsUrl: String = ""
 
 
-        fun bind(article: Article) {
+        fun bind(article: Article, onClick: OnNewsClickListener) {
 
             GlideApp.with(itemView)
                 .load(article.urlToImage)
@@ -69,16 +64,22 @@ class NewsAdapter(private val articles: List<Article>
             newsDate.text = article.publishedAt
             newsDate.text = prettyDate(article.publishedAt)
             newsUrl = article.url
+
+            itemView.setOnClickListener {
+                onClick.onItemClick(article, adapterPosition)
+            }
+
+
         }
 
-        fun prettyDate(publishTime: String): String{
+        private fun prettyDate(publishTime: String): String {
             var prettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
             var time = ""
             try {
                 var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
                 var date = dateFormat.parse(publishTime)
                 time = prettyTime.format(date)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("Adapter", e.localizedMessage)
                 e.printStackTrace()
             }
@@ -87,4 +88,7 @@ class NewsAdapter(private val articles: List<Article>
 
     }
 
+    interface OnNewsClickListener {
+        fun onItemClick(article: Article, position: Int)
+    }
 }

@@ -20,9 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.window.statusBarColor = getColor(R.color.colorPrimaryDark)
 
-//
 //        val toolbar: Toolbar = findViewById(R.id.toolBar)
 //        setSupportActionBar(toolbar)
 

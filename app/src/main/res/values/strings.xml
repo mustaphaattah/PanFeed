@@ -3,9 +3,6 @@
     <string name="home_title">Pandemic News</string>
     <string name="shout_out">Powered by NewsApi.org</string>
 
-    <!-- TODO: Remove or change this text -->
-    <string name="api_key">your key here</string>
-
     <string name="global_fragment">Global fragment</string>
     <string name="local_fragment">Local fragment</string>
     <string name="covid_keyword">corona</string>
