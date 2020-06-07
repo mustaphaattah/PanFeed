@@ -53,10 +53,17 @@ class ReadActivity : AppCompatActivity() {
             R.id.save_option -> {
                 Toast.makeText(this, "Save an article", Toast.LENGTH_SHORT).show()
             }
+            android.R.id.home -> onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }
 
+//    override fun onBackPressed() {
+//        val backIntent = Intent(this, MainActivity::class.java)
+//        backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//        startActivity(backIntent)
+//        finish()
+//    }
 
     private fun initReader(){
         var newsIntent = intent
@@ -78,8 +85,9 @@ class ReadActivity : AppCompatActivity() {
         }
 
         if (newsIntent.hasExtra("url")) {
-            newsWebView.settings.loadsImagesAutomatically = true
+            newsWebView.settings.loadsImagesAutomatically = false
             newsWebView.settings.javaScriptEnabled = true
+            newsWebView.settings.domStorageEnabled = true
             newsWebView.webViewClient = WebViewClient()
             newsUrl = newsIntent.getStringExtra("url")!!
             newsWebView.loadUrl(newsUrl)

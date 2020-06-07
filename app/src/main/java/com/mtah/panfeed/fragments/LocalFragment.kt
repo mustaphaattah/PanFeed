@@ -2,13 +2,13 @@ package com.mtah.panfeed.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -39,6 +39,7 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     lateinit var recyclerView: RecyclerView
     lateinit var swipeRefresh: SwipeRefreshLayout
     lateinit var newsAdapter: NewsAdapter
+    var articles = arrayListOf<Article>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,7 +52,7 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         recyclerView = view.findViewById(R.id.localRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        newsAdapter = NewsAdapter( mutableListOf(), this)
+        newsAdapter = NewsAdapter( articles, this)
         recyclerView.adapter = newsAdapter
 
         swipeRefresh = view.findViewById(R.id.localSwipeRefresh)
@@ -59,9 +60,9 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
         fetchLocalNews()
 
-
         return view
     }
+
 
     fun fetchLocalNews(){
         swipeRefresh.isRefreshing = true
@@ -83,20 +84,26 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 swipeRefresh!!.isRefreshing = false
                 if (response.isSuccessful){
 
-                    newsAdapter.addAllArticles(response.body()!!.articles)
+                    articles = response.body()!!.articles as ArrayList<Article>
+                    newsAdapter.addAllArticles(articles)
+
 
                     val newsCount = recyclerView.adapter!!.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
                         Toast.makeText(activity, "No Local news to show", Toast.LENGTH_LONG)
+                } else {
+                    response.raw().body?.close()
                 }
+
+
             }
 
         })
     }
 
     fun getCountryCode(): String {
-        return resources.configuration.locales[0].country.toLowerCase()
+        return resources.configuration.locale.country.toLowerCase()
     }
 
     override fun onItemClick(article: Article, position: Int) {

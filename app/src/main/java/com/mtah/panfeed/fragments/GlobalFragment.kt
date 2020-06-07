@@ -2,11 +2,11 @@ package com.mtah.panfeed.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,6 +22,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -35,9 +36,12 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     private val COVID_KEYWORD = "coronavirus"
     private val SORT_BY = "publishedAt"
     private val PAGE_SIZE = 50
+    var articles = arrayListOf<Article>()
+    var lastPosition = 0
 
     private lateinit var newsAdapter: NewsAdapter
     lateinit var recyclerView: RecyclerView
+    lateinit var layoutManager: LinearLayoutManager
     lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -56,11 +60,12 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         swipeRefresh = view.findViewById(R.id.globalRefresh)
         swipeRefresh.setOnRefreshListener { fetchNews() }
 
-        //fill the recycler view with news cards
         fetchNews()
 
         return view
     }
+
+
 
     private fun fetchNews(){
         swipeRefresh.isRefreshing = true
@@ -77,20 +82,22 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 swipeRefresh.isRefreshing = false
                 Log.e(TAG, "Response Failure")
                 Toast.makeText(activity, t.localizedMessage, Toast.LENGTH_SHORT)
-                Log.e(TAG, t.message)
+                Log.e(TAG, t.message!!)
             }
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful) {
                     Log.d(TAG, "onResponse successful: Showing articles")
-
-                    newsAdapter.addAllArticles(response.body()!!.articles)
+                    articles = response.body()!!.articles as ArrayList<Article>
+                    newsAdapter.addAllArticles(articles)
 
                     val newsCount = newsAdapter.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
                         Toast.makeText(activity, "No Global news to show", Toast.LENGTH_LONG)
+                } else {
+                    response.raw().body?.close()
                 }
             }
         })

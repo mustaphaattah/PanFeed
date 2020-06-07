@@ -19,7 +19,6 @@ import com.mtah.panfeed.adapters.PagerAdapter
  */
 class NewsFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,7 +34,7 @@ class NewsFragment : Fragment() {
         tabLayout.addTab(tabLayout.newTab().setText("Local"))
 
         val adapter =
-            PagerAdapter(this.context!!, childFragmentManager, tabLayout.tabCount)
+            PagerAdapter(context!!, childFragmentManager, tabLayout.tabCount)
         viewPager.adapter = adapter
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
