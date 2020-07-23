@@ -35,7 +35,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     private val TAG = "GlobalFragment"
     private val COVID_KEYWORD = "coronavirus"
     private val SORT_BY = "publishedAt"
-    private val PAGE_SIZE = 50
+    private val PAGE_SIZE = 100
     var articles = arrayListOf<Article>()
     var lastPosition = 0
 
@@ -70,8 +70,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     private fun fetchNews(){
         swipeRefresh.isRefreshing = true
         Log.d(TAG, "fetching News")
-        val request =
-            NewsApiClient.getApi(NewsInterface::class.java)
+        val request = NewsApiClient.getApi(NewsInterface::class.java)
         val lang = getLanguage()
         val call = request.getAllCovidNews(API_KEY, COVID_KEYWORD, lang, PAGE_SIZE, SORT_BY)
         Log.d(TAG, "news language $lang")

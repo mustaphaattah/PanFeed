@@ -1,17 +1,22 @@
 package com.mtah.panfeed.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.TextView
+import android.widget.Toast
 import com.mtah.panfeed.R
+import com.mtah.panfeed.api.CasesInterface
+import com.mtah.panfeed.api.Covid19ApiClient
+import com.mtah.panfeed.models.Country
+import com.mtah.panfeed.models.TotalCases
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -19,43 +24,50 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class CasesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val TAG = "CasesFragment"
+    lateinit var confirmedNumber: TextView
+    lateinit var recoveredNumber: TextView
+    lateinit var deathsNumber: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cases, container, false)
+        val view = inflater.inflate(R.layout.fragment_cases, container, false)
+
+        confirmedNumber = view.findViewById(R.id.confirmedNumber)
+        recoveredNumber = view.findViewById(R.id.recoveredNumber)
+        deathsNumber = view.findViewById(R.id.deathNumber)
+
+
+        fetchAllCases()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CasesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CasesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchAllCases(){
+        var requests = Covid19ApiClient.getApi(CasesInterface::class.java)
+        var call = requests.getTotalCases()
+
+        call.enqueue(object : Callback<Country> {
+            override fun onFailure(call: Call<Country>, t: Throwable) {
+                Log.e(TAG, "onFailure $t")
+                throw t
+            }
+
+            override fun onResponse(call: Call<Country>, response: Response<Country>) {
+                Log.i(TAG, "onResponse ${response.body().toString()}")
+                if (response.isSuccessful){
+                    var totalCases = response.body()!!
+                    Log.i(TAG, "onResponse $totalCases")
+                    confirmedNumber.text = totalCases.cases
+                    recoveredNumber.text = totalCases.recovered
+                    deathsNumber.text = totalCases.deaths
                 }
             }
+        })
     }
+
 }
