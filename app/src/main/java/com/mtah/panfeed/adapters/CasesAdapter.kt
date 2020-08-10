@@ -3,14 +3,17 @@ package com.mtah.panfeed.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mtah.panfeed.R
 import com.mtah.panfeed.models.Country
 import kotlinx.android.synthetic.main.case_card.view.*
+import java.util.*
 
-class CasesAdapter(var cases: List<Country>) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>() {
-
+class CasesAdapter(var cases: List<Country>) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
+    var fullCasesList = listOf(cases)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.case_card, parent, false)
         return CaseViewHolder(view)
@@ -40,4 +43,11 @@ class CasesAdapter(var cases: List<Country>) : RecyclerView.Adapter<CasesAdapter
         }
 
     }
+
+
+    override fun getFilter(): Filter {
+        TODO("Not yet implemented")
+        return filter
+    }
+
 }

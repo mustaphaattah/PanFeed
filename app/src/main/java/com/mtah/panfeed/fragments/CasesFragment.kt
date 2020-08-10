@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.mtah.panfeed.R
 import com.mtah.panfeed.adapters.CasesAdapter
 import com.mtah.panfeed.api.CasesInterface
@@ -30,12 +32,7 @@ import retrofit2.Response
 class CasesFragment : Fragment() {
 
     private val TAG = "CasesFragment"
-    lateinit var countryName: TextView
-    lateinit var confirmedNumber: TextView
-    lateinit var recoveredNumber: TextView
-    lateinit var deathsNumber: TextView
 
-    val casesList = mutableListOf<Country>()
     private lateinit var casesAdapter: CasesAdapter
     private lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: LinearLayoutManager
@@ -69,22 +66,21 @@ class CasesFragment : Fragment() {
         val requests = Covid19ApiClient.getApi(CasesInterface::class.java)
         val call = requests.getAllCases()
 
-        call.enqueue(object : Callback<Country> {
-            override fun onFailure(call: Call<Country>, t: Throwable) {
+        call.enqueue(object : Callback<List<Country>> {
+            override fun onFailure(call: Call<List<Country>>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
                 Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "get request FAILED")
                 t.printStackTrace()
             }
 
-            override fun onResponse(call: Call<Country>, response: Response<Country>) {
+            override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
                 swipeRefresh.isRefreshing = false
                 Log.i(TAG, "onResponse ${response.body()}")
                 if (response.isSuccessful){
-                    val case = response.body()!!
-                    casesList.add(case)
+                    var casesList = response.body()!!
 
-                    Log.i(TAG, "onResponse: got $case cases")
+                    Log.i(TAG, "onResponse: got ${casesList.size} cases")
                     casesAdapter = CasesAdapter(casesList)
 
                     recyclerView.layoutManager = layoutManager
@@ -97,25 +93,5 @@ class CasesFragment : Fragment() {
         })
     }
 
-    private fun fetchTotal(){
-        val req = Covid19ApiClient.getApi(CasesInterface::class.java)
-        val call = req.getCases()
-
-        call.enqueue(object : Callback<List<Country>> {
-            override fun onFailure(call: Call<List<Country>>, t: Throwable) {
-                Log.i(TAG, "${ t.message }")
-                t.printStackTrace()
-            }
-
-            override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
-                if (response.isSuccessful){
-                    val cases = response.body()
-                    Log.i(TAG, "Got ${cases?.size} cases")
-                    cases?.stream()?.forEach { Log.i(TAG, it.toString()) }
-                }
-            }
-
-        })
-    }
 
 }

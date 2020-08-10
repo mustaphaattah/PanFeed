@@ -8,11 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Covid19ApiClient {
     private const val COVID19_DATA_BASE_URL = "https://covid-19-tracking.p.rapidapi.com/v1/"
 
-    private val client = OkHttpClient.Builder().build()
-
     private val retrofit = Retrofit.Builder().baseUrl(COVID19_DATA_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
+        .client(NewsApiClient.client)
         .build()
 
 
