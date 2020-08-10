@@ -2,7 +2,6 @@ package com.mtah.panfeed.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -31,16 +30,16 @@ import kotlin.collections.ArrayList
  */
 class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
-    private val API_KEY = BuildConfig.api_key
+    private val APIKEY = BuildConfig.api_key
     private val TAG = "GlobalFragment"
-    private val COVID_KEYWORD = "coronavirus"
+    private val COVIDKEYWORD = "coronavirus"
     private val SORT_BY = "publishedAt"
-    private val PAGE_SIZE = 100
+    private val PAGESIZE = 100
     var articles = arrayListOf<Article>()
     var lastPosition = 0
 
     private lateinit var newsAdapter: NewsAdapter
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: LinearLayoutManager
     lateinit var swipeRefresh: SwipeRefreshLayout
 
@@ -72,7 +71,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         Log.d(TAG, "fetching News")
         val request = NewsApiClient.getApi(NewsInterface::class.java)
         val lang = getLanguage()
-        val call = request.getAllCovidNews(API_KEY, COVID_KEYWORD, lang, PAGE_SIZE, SORT_BY)
+        val call = request.getAllCovidNews(APIKEY, COVIDKEYWORD, lang, PAGESIZE, SORT_BY)
         Log.d(TAG, "news language $lang")
 
         Log.d(TAG, "Sending requests...")
@@ -80,7 +79,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
             override fun onFailure(call: Call<News>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
                 Log.e(TAG, "Response Failure")
-                Toast.makeText(activity, t.localizedMessage, Toast.LENGTH_SHORT)
+                Toast.makeText(activity, t.localizedMessage, Toast.LENGTH_SHORT).show()
                 Log.e(TAG, t.message!!)
             }
 
@@ -108,7 +107,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     }
 
     override fun onItemClick(article: Article, position: Int) {
-        var readIntent = Intent(context, ReadActivity::class.java)
+        val readIntent = Intent(context, ReadActivity::class.java)
         readIntent.putExtra("title", article.title)
         readIntent.putExtra("url", article.url)
         readIntent.putExtra("image", article.urlToImage)

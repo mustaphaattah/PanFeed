@@ -2,7 +2,7 @@
     <string name="app_name">PanFeed</string>
     <string name="home_title">Pandemic News</string>
     <string name="shout_out">Powered by NewsApi.org</string>
-    <string name="all_cases">Total Cases</string>
+    <string name="cases_name">Country</string>
     <string name="all_deaths">Deaths</string>
     <string name="all_recovered">Recovered</string>
     <string name="all_confirmed">Confirmed</string>
