@@ -20,9 +20,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-//        val toolbar: Toolbar = findViewById(R.id.toolBar)
-//        setSupportActionBar(toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolBar)
+        setSupportActionBar(toolbar)
 
         //set default view to news fragment
         supportFragmentManager.beginTransaction()

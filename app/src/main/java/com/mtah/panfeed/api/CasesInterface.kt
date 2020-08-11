@@ -1,16 +1,9 @@
 package com.mtah.panfeed.api
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
 import com.mtah.panfeed.models.Country
-import com.mtah.panfeed.models.CountryList
-import com.mtah.panfeed.models.TotalCases
-import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
-import retrofit2.http.Query
 
 interface CasesInterface {
 

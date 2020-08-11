@@ -6,19 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.blongho.country_data.World
 import com.mtah.panfeed.R
 import com.mtah.panfeed.adapters.CasesAdapter
 import com.mtah.panfeed.api.CasesInterface
 import com.mtah.panfeed.api.Covid19ApiClient
 import com.mtah.panfeed.models.Country
-import com.mtah.panfeed.models.CountryList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,6 +51,7 @@ class CasesFragment : Fragment() {
         swipeRefresh = view.findViewById(R.id.casesRefresh)
         swipeRefresh.setOnRefreshListener { fetchAllCases() }
 
+        World.init(context)
         fetchAllCases()
 //        fetchTotal()
 
@@ -76,12 +74,11 @@ class CasesFragment : Fragment() {
 
             override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
                 swipeRefresh.isRefreshing = false
-                Log.i(TAG, "onResponse ${response.body()}")
                 if (response.isSuccessful){
                     var casesList = response.body()!!
 
                     Log.i(TAG, "onResponse: got ${casesList.size} cases")
-                    casesAdapter = CasesAdapter(casesList)
+                    casesAdapter = CasesAdapter(casesList, activity?.applicationContext)
 
                     recyclerView.layoutManager = layoutManager
                     recyclerView.adapter = casesAdapter

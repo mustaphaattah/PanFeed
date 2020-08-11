@@ -74,14 +74,14 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
         call.enqueue(object : Callback<News> {
             override fun onFailure(call: Call<News>, t: Throwable) {
-                swipeRefresh!!.isRefreshing = false
+                swipeRefresh.isRefreshing = false
                 Toast.makeText(activity, "Unable to get Local news", Toast.LENGTH_SHORT)
                 Log.e(TAG, "Unable to get Local news")
-                Log.e(TAG, t.localizedMessage)
+                Log.e(TAG, "Error: ${t.message}")
             }
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
-                swipeRefresh!!.isRefreshing = false
+                swipeRefresh.isRefreshing = false
                 if (response.isSuccessful){
 
                     articles = response.body()!!.articles as ArrayList<Article>
@@ -101,7 +101,7 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     }
 
     fun getCountryCode(): String {
-        return resources.configuration.locale.country.toLowerCase()
+        return resources.configuration.locales[0].country.toLowerCase()
     }
 
     override fun onItemClick(article: Article, position: Int) {

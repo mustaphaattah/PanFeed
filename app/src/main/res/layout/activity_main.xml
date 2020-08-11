@@ -7,14 +7,9 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <include
             android:id="@+id/toolBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:title="@string/home_title"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
+            layout="@layout/toolbar"/>
 
     <FrameLayout
             android:id="@+id/fragment_container"
