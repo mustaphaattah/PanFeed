@@ -12,7 +12,7 @@ interface NewsInterface {
     fun getLocalNews(
         @Query("apiKey") apiKey: String,
         @Query("country") country: String,
-        @Query("q") keyWord: String,
+        @Query("category") category: String,
         @Query("pageSize") pageSize: Int
     ) : Call<News>
 

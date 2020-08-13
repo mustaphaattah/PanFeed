@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:elevation="2dp"
+                                   android:layout_marginBottom="2dp"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp" >
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="start">
+            <androidx.cardview.widget.CardView
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="16dp"
+                    android:elevation="0dp"
+                    android:id="@+id/flagCardView"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="5dp">
+                <ImageView
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:id="@+id/flagImageView"
+                        android:src="@drawable/no_img"
+                        android:contentDescription="@string/flag_description"
+                        android:scaleType="centerCrop"/>
+            </androidx.cardview.widget.CardView>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/countryName"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:text="@string/cases_name"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+        >
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/confirmedNumber"
+                        android:padding="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/secondary_text_light"
+                        android:text=""/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/confirmedLabel"
+                        android:textSize="12sp"
+                        android:text="@string/all_confirmed"/>
+            </LinearLayout>
+            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/grey"
+                  android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recoveredNumber"
+                        android:padding="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:text=""/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recoveredLabel"
+                        android:textSize="12sp"
+                        android:text="@string/all_recovered"/>
+            </LinearLayout>
+            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/grey"
+                  android:layout_marginStart="16dp" android:layout_marginEnd="16dp"/>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/deathNumber"
+                        android:padding="8dp"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:text=""/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/deathLabel"
+                        android:textSize="12sp"
+                        android:text="@string/all_deaths"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+<!--    <View android:layout_width="match_parent" android:layout_height="1dp"  android:background="@color/grey"/>-->
+</androidx.cardview.widget.CardView>

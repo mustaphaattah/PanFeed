@@ -1,61 +1,100 @@
 package com.mtah.panfeed.fragments
 
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.blongho.country_data.World
 import com.mtah.panfeed.R
+import com.mtah.panfeed.adapters.CasesAdapter
+import com.mtah.panfeed.api.CasesInterface
+import com.mtah.panfeed.api.Covid19ApiClient
+import com.mtah.panfeed.models.Country
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CasesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CasesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val TAG = "CasesFragment"
+
+    private lateinit var casesAdapter: CasesAdapter
+    private lateinit var recyclerView: RecyclerView
+    lateinit var layoutManager: LinearLayoutManager
+    lateinit var swipeRefresh: SwipeRefreshLayout
+    lateinit var counrtySearchView: SearchView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cases, container, false)
+        val view = inflater.inflate(R.layout.fragment_cases, container, false)
+
+        recyclerView = view.findViewById(R.id.casesRecyclerView)
+        layoutManager = LinearLayoutManager(context)
+
+        swipeRefresh = view.findViewById(R.id.casesRefresh)
+        swipeRefresh.setOnRefreshListener { fetchAllCases() }
+
+        counrtySearchView = view.findViewById(R.id.countrySearch)
+        counrtySearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                casesAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+
+        World.init(context)
+        fetchAllCases()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CasesFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CasesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchAllCases(){
+        Log.i(TAG, "Making get request...")
+        swipeRefresh.isRefreshing = true
+        val requests = Covid19ApiClient.getApi(CasesInterface::class.java)
+        val call = requests.getAllCases()
+
+        call.enqueue(object : Callback<MutableList<Country>> {
+            override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
+                swipeRefresh.isRefreshing = false
+                Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
+                Log.i(TAG, "get request FAILED")
+                t.printStackTrace()
+            }
+
+            override fun onResponse(call: Call<MutableList<Country>>, response: Response<MutableList<Country>>) {
+                swipeRefresh.isRefreshing = false
+                if (response.isSuccessful){
+                    val casesList = response.body()!!
+
+                    Log.i(TAG, "onResponse: got ${casesList.size} cases")
+                    //remove null last update case in response array
+                    casesList.removeAt(casesList.size-1)
+
+                    casesAdapter = CasesAdapter(casesList, activity?.applicationContext)
+
+                    recyclerView.layoutManager = layoutManager
+                    recyclerView.adapter = casesAdapter
+                } else {
+                    response.raw().body?.close()
                 }
             }
+        })
     }
+
+
+
 }

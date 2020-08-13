@@ -2,12 +2,21 @@
     <string name="app_name">PanFeed</string>
     <string name="home_title">Pandemic News</string>
     <string name="shout_out">Powered by NewsApi.org</string>
+    <string name="cases_name">Country</string>
+    <string name="all_deaths">Deaths</string>
+    <string name="all_recovered">Recovered</string>
+    <string name="all_confirmed">Confirmed</string>
+
 
     <string name="global_fragment">Global fragment</string>
     <string name="local_fragment">Local fragment</string>
     <string name="covid_keyword">corona</string>
 
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="flag_description">Country Flag</string>
+    <string name="save_icon_title">Save</string>
+    <string name="share_icon_title">Share</string>
+    <string name="search_icon_title">Search</string>
+    <string name="search_case_hint">Search for a Country</string>
 
 </resources>

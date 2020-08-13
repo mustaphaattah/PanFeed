@@ -33,8 +33,8 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
     val API_KEY = BuildConfig.api_key
     val TAG = "LocalFragment"
-    val COVID_KEYWORD = "coronavirus"
-    val PAGE_SIZE = 50
+    val CATEGORY = "health"
+    val PAGE_SIZE = 100
 
     lateinit var recyclerView: RecyclerView
     lateinit var swipeRefresh: SwipeRefreshLayout
@@ -69,19 +69,19 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         val request =
             NewsApiClient.getApi(NewsInterface::class.java)
         val country = getCountryCode()
-        val call = request.getLocalNews(API_KEY, country, COVID_KEYWORD, PAGE_SIZE)
+        val call = request.getLocalNews(API_KEY, country, CATEGORY, PAGE_SIZE)
         Log.d(TAG, "the locale code: $country")
 
         call.enqueue(object : Callback<News> {
             override fun onFailure(call: Call<News>, t: Throwable) {
-                swipeRefresh!!.isRefreshing = false
+                swipeRefresh.isRefreshing = false
                 Toast.makeText(activity, "Unable to get Local news", Toast.LENGTH_SHORT)
                 Log.e(TAG, "Unable to get Local news")
-                Log.e(TAG, t.localizedMessage)
+                Log.e(TAG, "Error: ${t.message}")
             }
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
-                swipeRefresh!!.isRefreshing = false
+                swipeRefresh.isRefreshing = false
                 if (response.isSuccessful){
 
                     articles = response.body()!!.articles as ArrayList<Article>
@@ -95,15 +95,13 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 } else {
                     response.raw().body?.close()
                 }
-
-
             }
 
         })
     }
 
     fun getCountryCode(): String {
-        return resources.configuration.locale.country.toLowerCase()
+        return resources.configuration.locales[0].country.toLowerCase()
     }
 
     override fun onItemClick(article: Article, position: Int) {
