@@ -2,11 +2,10 @@ package com.mtah.panfeed.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,12 +19,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CasesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CasesFragment : Fragment() {
 
     private val TAG = "CasesFragment"
@@ -34,15 +27,13 @@ class CasesFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: LinearLayoutManager
     lateinit var swipeRefresh: SwipeRefreshLayout
-
-
+    lateinit var counrtySearchView: SearchView
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_cases, container, false)
 
         recyclerView = view.findViewById(R.id.casesRecyclerView)
@@ -51,9 +42,21 @@ class CasesFragment : Fragment() {
         swipeRefresh = view.findViewById(R.id.casesRefresh)
         swipeRefresh.setOnRefreshListener { fetchAllCases() }
 
+        counrtySearchView = view.findViewById(R.id.countrySearch)
+        counrtySearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                casesAdapter.filter.filter(newText)
+                return false
+            }
+
+        })
+
         World.init(context)
         fetchAllCases()
-//        fetchTotal()
 
         return view
     }
@@ -64,31 +67,34 @@ class CasesFragment : Fragment() {
         val requests = Covid19ApiClient.getApi(CasesInterface::class.java)
         val call = requests.getAllCases()
 
-        call.enqueue(object : Callback<List<Country>> {
-            override fun onFailure(call: Call<List<Country>>, t: Throwable) {
+        call.enqueue(object : Callback<MutableList<Country>> {
+            override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
                 Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
                 Log.i(TAG, "get request FAILED")
                 t.printStackTrace()
             }
 
-            override fun onResponse(call: Call<List<Country>>, response: Response<List<Country>>) {
+            override fun onResponse(call: Call<MutableList<Country>>, response: Response<MutableList<Country>>) {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful){
-                    var casesList = response.body()!!
+                    val casesList = response.body()!!
 
                     Log.i(TAG, "onResponse: got ${casesList.size} cases")
+                    //remove null last update case in response array
+                    casesList.removeAt(casesList.size-1)
+
                     casesAdapter = CasesAdapter(casesList, activity?.applicationContext)
 
                     recyclerView.layoutManager = layoutManager
                     recyclerView.adapter = casesAdapter
                 } else {
-                    //close response body
                     response.raw().body?.close()
                 }
             }
         })
     }
+
 
 
 }

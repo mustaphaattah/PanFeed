@@ -1,22 +1,22 @@
 package com.mtah.panfeed.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.blongho.country_data.World
 import com.mtah.panfeed.R
 import com.mtah.panfeed.models.Country
-import kotlinx.android.synthetic.main.case_card.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
-class CasesAdapter(var cases: List<Country>, val context: Context?) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>() {
-    //var fullCasesList = listOf(cases)
+class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
+    val TAG = "CasesAdapter"
+    val fullCasesList = cases.toList()
+
     init {
         World.init(context)
     }
@@ -41,21 +41,50 @@ class CasesAdapter(var cases: List<Country>, val context: Context?) : RecyclerVi
         private val countryFlag: ImageView = itemView.findViewById(R.id.flagImageView)
 
         fun bind(countryCase: Country) {
-            if (!countryCase.country.isNullOrBlank()) {
-                val countryName = countryCase.country
-                caseName.text = countryName
+            val countryName = countryCase.country
+            caseName.text = countryName
 
-                countryFlag.setImageResource(World.getFlagOf(countryName))
-                if (countryName == "World") countryFlag.setImageResource(R.drawable.world_img)
+            countryFlag.setImageResource(World.getFlagOf(countryName))
+            if (countryName == "World") countryFlag.setImageResource(R.drawable.world_img)
 
-                confirmedNumber.text = if (countryCase.cases.isNotBlank()) countryCase.cases else "N/A"
-                recoveredNumber.text = if (countryCase.recovered.isNotBlank()) countryCase.recovered else "N/A"
-                deathsNumber.text = if (countryCase.deaths.isNotBlank()) countryCase.deaths else "N/A"
-            }
+            confirmedNumber.text = if (countryCase.cases.isNotBlank()) countryCase.cases else "N/A"
+            recoveredNumber.text = if (countryCase.recovered.isNotBlank()) countryCase.recovered else "N/A"
+            deathsNumber.text = if (countryCase.deaths.isNotBlank()) countryCase.deaths else "N/A"
         }
     }
 
+    override fun getFilter(): Filter {
+        return filter
+    }
 
+    private var filter  = object : Filter() {
+        val filteredList = mutableListOf<Country>()
 
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            Log.i(TAG, "Query: $constraint")
+            filteredList.clear()
+            if (constraint.isNullOrBlank()) {
+                filteredList.addAll(fullCasesList)
+            }else {
+                val filterPattern = constraint.toString().toLowerCase().trim()
+                filteredList.addAll(fullCasesList.filter {
+                    it.country.toLowerCase().contains(filterPattern)
+                })
+            }
+
+            val results = FilterResults()
+            results.values =  filteredList
+            return results
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            cases = if(results?.values == null) {
+                arrayListOf()
+            } else results.values as MutableList<Country>
+            notifyDataSetChanged()
+//            Toast.makeText(context, "No resutls", Toast.LENGTH_SHORT).show()
+        }
+
+    }
 
 }

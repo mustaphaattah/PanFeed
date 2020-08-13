@@ -14,5 +14,9 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="flag_description">Country Flag</string>
+    <string name="save_icon_title">Save</string>
+    <string name="share_icon_title">Share</string>
+    <string name="search_icon_title">Search</string>
+    <string name="search_case_hint">Search for a Country</string>
 
 </resources>

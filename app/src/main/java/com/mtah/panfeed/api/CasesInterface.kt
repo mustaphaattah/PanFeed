@@ -13,5 +13,5 @@ interface CasesInterface {
         ,"useQueryString: true"
     )
     @GET("https://covid-19-tracking.p.rapidapi.com/v1")
-    fun getAllCases () : Call<List<Country>>
+    fun getAllCases () : Call<MutableList<Country>>
 }
