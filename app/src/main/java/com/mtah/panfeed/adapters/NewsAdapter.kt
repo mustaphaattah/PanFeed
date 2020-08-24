@@ -54,7 +54,7 @@ class NewsAdapter(var articles: MutableList<Article>,
             GlideApp.with(itemView)
                 .load(article.urlToImage)
                 .fallback(R.drawable.no_img)
-                .placeholder(R.drawable.loading_animation)
+                .placeholder(R.drawable.no_img)
                 .error(R.drawable.no_img)
                 .centerCrop()
                 .into(newsImage)
@@ -73,11 +73,11 @@ class NewsAdapter(var articles: MutableList<Article>,
         }
 
         private fun prettyDate(publishTime: String): String {
-            var prettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
+            val prettyTime = PrettyTime(Locale.getDefault().country.toLowerCase())
             var time = ""
             try {
-                var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
-                var date = dateFormat.parse(publishTime)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
+                val date = dateFormat.parse(publishTime)
                 time = prettyTime.format(date)
             } catch (e: Exception) {
                 Log.e("Adapter", e.localizedMessage)

@@ -13,20 +13,19 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.mtah.panfeed.api.GlideApp
-import kotlinx.android.synthetic.main.activity_read.*
 
 class ReadActivity : AppCompatActivity() {
 
-    lateinit var newsWebView: WebView
-    lateinit var newsImageView: ImageView
-    lateinit var newsProgressBar: ProgressBar
-    lateinit var newsUrl: String
+    private lateinit var newsWebView: WebView
+    private lateinit var newsImageView: ImageView
+    private lateinit var newsProgressBar: ProgressBar
+    private lateinit var newsUrl: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read)
 
-        var toolbar = findViewById<Toolbar>(R.id.newsToolbar)
+        val toolbar = findViewById<Toolbar>(R.id.newsToolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -48,10 +47,10 @@ class ReadActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.share_option -> {
                 shareArticle()
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             }
             R.id.save_option -> {
-                Toast.makeText(this, "Save an article", Toast.LENGTH_SHORT).show()
+//                TODO("saveArticle()")
+                Toast.makeText(this, "Article Saved", Toast.LENGTH_SHORT).show()
             }
             android.R.id.home -> onBackPressed()
         }
@@ -64,12 +63,21 @@ class ReadActivity : AppCompatActivity() {
 //        startActivity(backIntent)
 //        finish()
 //    }
+    private fun saveArticle(){
+        val newsIntent = intent
+        if (newsIntent.hasExtra("image") && newsIntent.hasExtra("title") &&
+            newsIntent.hasExtra("url") && newsIntent.hasExtra("date")) {
+//            TODO("save article")
+            return
+        }
+        Toast.makeText(this, "Cannot save this article", Toast.LENGTH_SHORT)
+    }
 
     private fun initReader(){
-        var newsIntent = intent
+        val newsIntent = intent
 
-        if (intent.hasExtra("image")){
-            var imageUrl = newsIntent.getStringExtra("image")
+        if (newsIntent.hasExtra("image")){
+            val imageUrl = newsIntent.getStringExtra("image")
             GlideApp.with(this)
                 .load(imageUrl)
                 .fallback(R.drawable.no_img)
@@ -79,8 +87,8 @@ class ReadActivity : AppCompatActivity() {
                 .into(newsImageView)
         }
 
-        if (intent.hasExtra("title")){
-            var title = newsIntent.getStringExtra("title")
+        if (newsIntent.hasExtra("title")){
+            val title = newsIntent.getStringExtra("title")
             supportActionBar?.title = title
         }
 
@@ -97,8 +105,8 @@ class ReadActivity : AppCompatActivity() {
     }
 
     private fun shareArticle() {
-        var shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.setType("text/plain")
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Article shared through Panfeed")
         shareIntent.putExtra(Intent.EXTRA_TEXT, newsUrl)
         startActivity(Intent.createChooser(shareIntent, "Share via"))

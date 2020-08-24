@@ -24,11 +24,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LocalFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
     val API_KEY = BuildConfig.api_key
@@ -92,9 +87,11 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
                         Toast.makeText(activity, "No Local news to show", Toast.LENGTH_LONG)
-                } else {
+                }
+                else {
                     response.raw().body?.close()
                 }
+//                response.raw().body?.close()
             }
 
         })
@@ -105,7 +102,7 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     }
 
     override fun onItemClick(article: Article, position: Int) {
-        var readIntent = Intent(context, ReadActivity::class.java)
+        val readIntent = Intent(context, ReadActivity::class.java)
         readIntent.putExtra("title", article.title)
         readIntent.putExtra("url", article.url)
         readIntent.putExtra("image", article.urlToImage)

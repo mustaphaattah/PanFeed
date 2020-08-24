@@ -18,5 +18,8 @@
     <string name="share_icon_title">Share</string>
     <string name="search_icon_title">Search</string>
     <string name="search_case_hint">Search for a Country</string>
+    <string name="saved_news_title">Title</string>
+    <string name="saved_news_date">Date</string>
+    <string name="saved_news_image_content_description">News image</string>
 
 </resources>

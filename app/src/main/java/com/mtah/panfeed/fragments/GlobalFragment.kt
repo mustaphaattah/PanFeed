@@ -23,11 +23,6 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GlobalFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
     private val APIKEY = BuildConfig.api_key
@@ -94,9 +89,11 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
                         Toast.makeText(activity, "No Global news to show", Toast.LENGTH_LONG)
-                } else {
+                }
+                else {
                     response.raw().body?.close()
                 }
+//                response.raw().body?.close()
             }
         })
 
