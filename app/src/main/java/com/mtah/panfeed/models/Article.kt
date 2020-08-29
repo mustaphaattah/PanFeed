@@ -4,13 +4,13 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 @Entity(tableName = "news_table")
 data class Article (
 
     @SerializedName("title")
     var title: String,
-
 
     @SerializedName("url")
     var url: String,

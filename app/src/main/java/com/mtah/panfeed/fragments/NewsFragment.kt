@@ -11,12 +11,6 @@ import com.google.android.material.tabs.TabLayout
 import com.mtah.panfeed.R
 import com.mtah.panfeed.adapters.PagerAdapter
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NewsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NewsFragment : Fragment() {
 
     override fun onCreateView(
@@ -43,7 +37,7 @@ class NewsFragment : Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-
+                viewPager.currentItem = tab!!.position
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {

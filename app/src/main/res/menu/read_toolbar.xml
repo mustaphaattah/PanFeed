@@ -8,7 +8,10 @@
 
     <item android:id="@+id/save_option"
           android:title="@string/save_icon_title"
-          app:showAsAction="always"
+          app:showAsAction="never"
           android:icon="@drawable/ic_save"/>
+    <item android:id="@+id/open_browser_option"
+          android:title="@string/open_option_title"
+          app:showAsAction="never"/>
 
 </menu>

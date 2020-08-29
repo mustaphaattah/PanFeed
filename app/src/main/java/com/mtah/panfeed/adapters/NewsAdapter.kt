@@ -1,18 +1,13 @@
 package com.mtah.panfeed.adapters
 
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.mtah.panfeed.R
-import com.mtah.panfeed.ReadActivity
 import com.mtah.panfeed.api.GlideApp
 import com.mtah.panfeed.models.Article
 import org.ocpsoft.prettytime.PrettyTime
@@ -21,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NewsAdapter(var articles: MutableList<Article>,
-                  val clickListener: OnNewsClickListener
+                  private val clickListener: OnNewsClickListener
 ): RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false)
@@ -66,7 +61,7 @@ class NewsAdapter(var articles: MutableList<Article>,
             newsUrl = article.url
 
             itemView.setOnClickListener {
-                onClick.onItemClick(article, adapterPosition)
+                onClick.onItemClick(article)
             }
 
 
@@ -80,7 +75,7 @@ class NewsAdapter(var articles: MutableList<Article>,
                 val date = dateFormat.parse(publishTime)
                 time = prettyTime.format(date)
             } catch (e: Exception) {
-                Log.e("Adapter", e.localizedMessage)
+                Log.e("Adapter", "ERROR: ${e.localizedMessage}")
                 e.printStackTrace()
             }
             return time
@@ -89,6 +84,7 @@ class NewsAdapter(var articles: MutableList<Article>,
     }
 
     interface OnNewsClickListener {
-        fun onItemClick(article: Article, position: Int)
+        fun onItemClick(article: Article)
     }
+
 }

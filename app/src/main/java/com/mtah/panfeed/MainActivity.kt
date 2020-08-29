@@ -2,14 +2,9 @@ package com.mtah.panfeed
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout
-import com.mtah.panfeed.adapters.PagerAdapter
 import com.mtah.panfeed.fragments.CasesFragment
 import com.mtah.panfeed.fragments.NewsFragment
 import com.mtah.panfeed.fragments.SavedFragment
@@ -48,4 +43,12 @@ class MainActivity : AppCompatActivity() {
 
         true
     }
+
+    companion object {
+        const val EXTRA_TITLE = "com.mtah.panfeed.TITLE"
+        const val EXTRA_URL = "com.mtah.panfeed.URL"
+        const val EXTRA_IMAGE_URL = "com.mtah.panfeed.IMAGEURL"
+        const val EXTRA_DATE = "com.mtah.panfeed.DATE"
+    }
+
 }

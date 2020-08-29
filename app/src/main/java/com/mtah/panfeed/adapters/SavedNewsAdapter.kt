@@ -1,6 +1,5 @@
 package com.mtah.panfeed.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mtah.panfeed.R
 import com.mtah.panfeed.api.GlideApp
 import com.mtah.panfeed.models.Article
-import org.ocpsoft.prettytime.PrettyTime
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
-class SavedNewsAdapter(): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>() {
+
+class SavedNewsAdapter(private val clickListener: OnSavedNewsClickListener): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>() {
     private var savedNews = listOf<Article>()
 
     class SavedNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -24,7 +20,7 @@ class SavedNewsAdapter(): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>
         private val date = itemView.findViewById<TextView>(R.id.savedNewsDate)
         var newsUrl: String = ""
 
-        fun bind (article: Article) {
+        fun bind (article: Article, onClick: OnSavedNewsClickListener) {
             title.text = article.title
             newsUrl = article.url
 
@@ -37,8 +33,10 @@ class SavedNewsAdapter(): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>
                 .into(image)
 
             date.text = getDate(getDate(article.publishedAt))
-            Log.i("SavedNewsAdapter", "Date ==> ${date.text} ")
 
+            itemView.setOnClickListener{
+                onClick.onItemClick(article)
+            }
         }
 
         private fun getDate(publishTime: String): String {
@@ -52,7 +50,7 @@ class SavedNewsAdapter(): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>
     }
 
     override fun onBindViewHolder(holder: SavedNewsHolder, position: Int) {
-        holder.bind(savedNews[position])
+        holder.bind(savedNews[position], clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -63,4 +61,9 @@ class SavedNewsAdapter(): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>
         this.savedNews = newsList
         notifyDataSetChanged()
     }
+
+    interface OnSavedNewsClickListener {
+        fun onItemClick(article: Article)
+    }
+
 }

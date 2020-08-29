@@ -1,16 +1,13 @@
 package com.mtah.panfeed.persistence
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.mtah.panfeed.models.Article
 
 @Dao
 interface SavedNewsDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(article: Article)
 
     @Delete

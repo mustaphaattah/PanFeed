@@ -21,5 +21,10 @@
     <string name="saved_news_title">Title</string>
     <string name="saved_news_date">Date</string>
     <string name="saved_news_image_content_description">News image</string>
+    <string name="toolbar_image_description">News image</string>
+    <string name="shadow_top">Image shadow top</string>
+    <string name="shadow_bottom">Image shadow bottom</string>
+    <string name="open_option_title">Open in Browser</string>
+    <string name="local_headlines_title">Top Local Headlines Today</string>
 
 </resources>

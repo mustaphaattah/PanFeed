@@ -29,10 +29,19 @@
                          android:layout_height="250dp"
                          android:id="@+id/newsImageView"
                          android:src="@drawable/no_img"
-                         android:scaleType="centerCrop"/>
+                         android:scaleType="centerCrop"
+                         android:contentDescription="@string/toolbar_image_description"/>
 
-                <ImageView android:layout_width="match_parent" android:layout_height="100dp" android:src="@drawable/shadow_top" android:layout_gravity="top"/>
-                <ImageView android:layout_width="match_parent" android:layout_height="100dp" android:src="@drawable/shadow_bottom" android:layout_gravity="bottom"/>
+                <ImageView android:layout_width="match_parent"
+                           android:layout_height="100dp"
+                           android:src="@drawable/shadow_top"
+                           android:layout_gravity="top"
+                           android:contentDescription="@string/shadow_top"/>
+                <ImageView android:layout_width="match_parent"
+                           android:layout_height="100dp"
+                           android:src="@drawable/shadow_bottom"
+                           android:layout_gravity="bottom"
+                           android:contentDescription="@string/shadow_bottom"/>
             </FrameLayout>
 
             <androidx.appcompat.widget.Toolbar
