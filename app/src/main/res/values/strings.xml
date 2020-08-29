@@ -26,5 +26,7 @@
     <string name="shadow_bottom">Image shadow bottom</string>
     <string name="open_option_title">Open in Browser</string>
     <string name="local_headlines_title">Top Local Headlines Today</string>
+    <string name="empty_save_text">No Saved Articles</string>
+    <string name="delete_all_text">Delete All</string>
 
 </resources>

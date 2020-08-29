@@ -12,7 +12,7 @@ import com.mtah.panfeed.models.Article
 
 
 class SavedNewsAdapter(private val clickListener: OnSavedNewsClickListener): RecyclerView.Adapter<SavedNewsAdapter.SavedNewsHolder>() {
-    private var savedNews = listOf<Article>()
+    private var savedNews = mutableListOf<Article>()
 
     class SavedNewsHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         private val title = itemView.findViewById<TextView>(R.id.savedNewsTitle)
@@ -57,7 +57,11 @@ class SavedNewsAdapter(private val clickListener: OnSavedNewsClickListener): Rec
         return savedNews.size
     }
 
-    fun setNewsList(newsList: List<Article>){
+    fun getItemAt(position: Int): Article{
+        return savedNews[position]
+    }
+
+    fun setNewsList(newsList: MutableList<Article>){
         this.savedNews = newsList
         notifyDataSetChanged()
     }
