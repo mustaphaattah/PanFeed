@@ -13,7 +13,7 @@ import com.mtah.panfeed.models.Country
 
 class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
     val TAG = "CasesAdapter"
-    val fullCasesList = cases.toList()
+    var fullCasesList = cases
 
     init {
         World.init(context)
@@ -53,6 +53,11 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
 
     override fun getFilter(): Filter {
         return filter
+    }
+
+    fun setCaseList(casesList: MutableList<Country>) {
+        fullCasesList = casesList
+        notifyDataSetChanged()
     }
 
     private var filter  = object : Filter() {

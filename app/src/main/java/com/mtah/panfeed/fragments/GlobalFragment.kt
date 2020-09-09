@@ -81,8 +81,9 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful) {
                     Log.d(TAG, "onResponse successful: Showing articles")
-                    articles = response.body()!!.articles as ArrayList<Article>
-                    newsAdapter.addAllArticles(articles)
+                    articles = (response.body()!!.articles as ArrayList<Article>)
+//                    filtering out daily mail articles
+                    newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "dailymail" })
 
                     val newsCount = newsAdapter.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")

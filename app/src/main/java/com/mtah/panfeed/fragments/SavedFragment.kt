@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.mtah.panfeed.MainActivity
 
 import com.mtah.panfeed.R
@@ -19,12 +20,15 @@ import com.mtah.panfeed.ReadActivity
 import com.mtah.panfeed.SavedViewModel
 import com.mtah.panfeed.adapters.SavedNewsAdapter
 import com.mtah.panfeed.models.Article
+import kotlin.math.log
 
 
- class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
+class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
      private lateinit var savedViewModel: SavedViewModel
      private var savedNewsList: MutableList<Article> = mutableListOf()
      private lateinit var emptySaveTextView: TextView
+     private lateinit var savedNewsAdapter: SavedNewsAdapter
+     private lateinit var deletedArticle: Article
     private val TAG = "SavedFragment"
 
     override fun onCreateView(
@@ -36,7 +40,7 @@ import com.mtah.panfeed.models.Article
 
         val savedNewsRecyclerView: RecyclerView = view.findViewById(R.id.savedNewsRecyclerView)
         savedNewsRecyclerView.layoutManager = LinearLayoutManager(context)
-        val savedNewsAdapter = SavedNewsAdapter(this)
+        savedNewsAdapter = SavedNewsAdapter(this)
         savedNewsRecyclerView.adapter = savedNewsAdapter
 
         emptySaveTextView = view.findViewById(R.id.saveEmptyText)
@@ -61,8 +65,7 @@ import com.mtah.panfeed.models.Article
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                savedViewModel.delete(savedNewsAdapter.getItemAt(viewHolder.adapterPosition))
-                Toast.makeText(context, "Article deleted.", Toast.LENGTH_SHORT).show()
+                removeArticle(viewHolder)
             }
 
         }
@@ -107,6 +110,20 @@ import com.mtah.panfeed.models.Article
 
          Log.i(TAG, "onItemClick: Opening ${article.url}")
          startActivity(readIntent)
+     }
+
+     private fun removeArticle(viewHolder: RecyclerView.ViewHolder){
+         val position = viewHolder.adapterPosition
+         deletedArticle = savedNewsAdapter.getItemAt(position )
+         savedViewModel.delete(deletedArticle)
+         savedNewsAdapter.notifyItemRemoved(position)
+         Log.i(TAG, "removeArticle: Article removed")
+         Snackbar.make(viewHolder.itemView, "Article removed.", Snackbar.LENGTH_LONG)
+             .setAction("UNDO") {
+                 savedNewsAdapter.add(position, deletedArticle)
+                 savedViewModel.insert(deletedArticle)
+                 Log.i(TAG, "removeArticle: Delete Undone")
+         }.show()
      }
 
 

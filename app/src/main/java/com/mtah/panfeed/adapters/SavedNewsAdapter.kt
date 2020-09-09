@@ -57,6 +57,11 @@ class SavedNewsAdapter(private val clickListener: OnSavedNewsClickListener): Rec
         return savedNews.size
     }
 
+    fun add(position: Int, article: Article){
+        savedNews.add(position, article)
+        notifyItemInserted(position)
+    }
+
     fun getItemAt(position: Int): Article{
         return savedNews[position]
     }
