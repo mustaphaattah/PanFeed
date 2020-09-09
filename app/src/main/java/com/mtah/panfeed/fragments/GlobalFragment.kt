@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mtah.panfeed.BuildConfig
+import com.mtah.panfeed.MainActivity
 import com.mtah.panfeed.adapters.NewsAdapter
 import com.mtah.panfeed.api.NewsApiClient
 import com.mtah.panfeed.api.NewsInterface
@@ -23,11 +24,6 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GlobalFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
     private val APIKEY = BuildConfig.api_key
@@ -36,11 +32,9 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
     private val SORT_BY = "publishedAt"
     private val PAGESIZE = 100
     var articles = arrayListOf<Article>()
-    var lastPosition = 0
 
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var recyclerView: RecyclerView
-    lateinit var layoutManager: LinearLayoutManager
     lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreateView(
@@ -87,14 +81,16 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful) {
                     Log.d(TAG, "onResponse successful: Showing articles")
-                    articles = response.body()!!.articles as ArrayList<Article>
-                    newsAdapter.addAllArticles(articles)
+                    articles = (response.body()!!.articles as ArrayList<Article>)
+//                    filtering out daily mail articles
+                    newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "dailymail" })
 
                     val newsCount = newsAdapter.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
                         Toast.makeText(activity, "No Global news to show", Toast.LENGTH_LONG)
-                } else {
+                }
+                else {
                     response.raw().body?.close()
                 }
             }
@@ -106,12 +102,14 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         return Locale.getDefault().language
     }
 
-    override fun onItemClick(article: Article, position: Int) {
+    override fun onItemClick(article: Article) {
         val readIntent = Intent(context, ReadActivity::class.java)
-        readIntent.putExtra("title", article.title)
-        readIntent.putExtra("url", article.url)
-        readIntent.putExtra("image", article.urlToImage)
-        Log.d(TAG, "---------------------Article $position Clicked: ${article.title}========================================")
+        readIntent.putExtra(MainActivity.EXTRA_TITLE, article.title)
+        readIntent.putExtra(MainActivity.EXTRA_URL, article.url)
+        readIntent.putExtra(MainActivity.EXTRA_IMAGE_URL, article.urlToImage)
+        readIntent.putExtra(MainActivity.EXTRA_DATE, article.publishedAt)
+
+        Log.i(TAG, "onItemClick: Opening ${article.url}")
         startActivity(readIntent)
     }
 }

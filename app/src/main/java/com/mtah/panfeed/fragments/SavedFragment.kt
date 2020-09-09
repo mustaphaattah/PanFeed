@@ -1,61 +1,130 @@
 package com.mtah.panfeed.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
+import com.mtah.panfeed.MainActivity
 
 import com.mtah.panfeed.R
+import com.mtah.panfeed.ReadActivity
+import com.mtah.panfeed.SavedViewModel
+import com.mtah.panfeed.adapters.SavedNewsAdapter
+import com.mtah.panfeed.models.Article
+import kotlin.math.log
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SavedFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SavedFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
+     private lateinit var savedViewModel: SavedViewModel
+     private var savedNewsList: MutableList<Article> = mutableListOf()
+     private lateinit var emptySaveTextView: TextView
+     private lateinit var savedNewsAdapter: SavedNewsAdapter
+     private lateinit var deletedArticle: Article
+    private val TAG = "SavedFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_saved, container, false)
+        val view = inflater.inflate(R.layout.fragment_saved, container, false)
+        setHasOptionsMenu(true)
+
+        val savedNewsRecyclerView: RecyclerView = view.findViewById(R.id.savedNewsRecyclerView)
+        savedNewsRecyclerView.layoutManager = LinearLayoutManager(context)
+        savedNewsAdapter = SavedNewsAdapter(this)
+        savedNewsRecyclerView.adapter = savedNewsAdapter
+
+        emptySaveTextView = view.findViewById(R.id.saveEmptyText)
+
+
+        savedViewModel = ViewModelProvider(requireActivity()).get(SavedViewModel::class.java)
+        savedViewModel.getAll().observe(viewLifecycleOwner, { news ->
+            emptySaveTextView.visibility = if (news.isNotEmpty()) View.GONE else View.VISIBLE
+            savedNewsList = news as MutableList<Article>
+            savedNewsAdapter.setNewsList(savedNewsList)
+        })
+
+
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0,
+        ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                removeArticle(viewHolder)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(savedNewsRecyclerView)
+
+
+
+
+        val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.savedSwipeRefresh)
+        swipeRefresh.setOnRefreshListener {
+            swipeRefresh.isRefreshing = true
+            savedNewsList.forEach{ Log.d(TAG, "checkDB: ${it.url}")}
+            swipeRefresh.isRefreshing = false
+        }
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SavedFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SavedFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-}
+
+     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+         super.onCreateOptionsMenu(menu, inflater)
+         inflater.inflate(R.menu.saved_menu, menu)
+     }
+
+     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+         when (item.itemId) {
+             R.id.delete_all_option -> {
+                 savedViewModel.deleteAll()
+                 Toast.makeText(context, "All articles deleted.", Toast.LENGTH_SHORT).show()
+             }
+         }
+         return super.onOptionsItemSelected(item)
+     }
+
+     override fun onItemClick(article: Article) {
+         val readIntent = Intent(context, ReadActivity::class.java)
+         readIntent.putExtra(MainActivity.EXTRA_TITLE, article.title)
+         readIntent.putExtra(MainActivity.EXTRA_URL, article.url)
+         readIntent.putExtra(MainActivity.EXTRA_IMAGE_URL, article.urlToImage)
+         readIntent.putExtra(MainActivity.EXTRA_DATE, article.publishedAt)
+
+         Log.i(TAG, "onItemClick: Opening ${article.url}")
+         startActivity(readIntent)
+     }
+
+     private fun removeArticle(viewHolder: RecyclerView.ViewHolder){
+         val position = viewHolder.adapterPosition
+         deletedArticle = savedNewsAdapter.getItemAt(position )
+         savedViewModel.delete(deletedArticle)
+         savedNewsAdapter.notifyItemRemoved(position)
+         Log.i(TAG, "removeArticle: Article removed")
+         Snackbar.make(viewHolder.itemView, "Article removed.", Snackbar.LENGTH_LONG)
+             .setAction("UNDO") {
+                 savedNewsAdapter.add(position, deletedArticle)
+                 savedViewModel.insert(deletedArticle)
+                 Log.i(TAG, "removeArticle: Delete Undone")
+         }.show()
+     }
+
+
+ }

@@ -25,7 +25,6 @@ class CasesFragment : Fragment() {
 
     private lateinit var casesAdapter: CasesAdapter
     private lateinit var recyclerView: RecyclerView
-    lateinit var layoutManager: LinearLayoutManager
     lateinit var swipeRefresh: SwipeRefreshLayout
     lateinit var counrtySearchView: SearchView
 
@@ -37,10 +36,15 @@ class CasesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_cases, container, false)
 
         recyclerView = view.findViewById(R.id.casesRecyclerView)
-        layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        casesAdapter = CasesAdapter(mutableListOf(), context)
+        recyclerView.adapter = casesAdapter
 
         swipeRefresh = view.findViewById(R.id.casesRefresh)
         swipeRefresh.setOnRefreshListener { fetchAllCases() }
+
+        World.init(context)
+
 
         counrtySearchView = view.findViewById(R.id.countrySearch)
         counrtySearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
@@ -55,9 +59,7 @@ class CasesFragment : Fragment() {
 
         })
 
-        World.init(context)
         fetchAllCases()
-
         return view
     }
 
@@ -77,16 +79,17 @@ class CasesFragment : Fragment() {
 
             override fun onResponse(call: Call<MutableList<Country>>, response: Response<MutableList<Country>>) {
                 swipeRefresh.isRefreshing = false
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     val casesList = response.body()!!
 
                     Log.i(TAG, "onResponse: got ${casesList.size} cases")
                     //remove null last update case in response array
-                    casesList.removeAt(casesList.size-1)
+                    casesList.removeAt(casesList.size - 1)
+                    casesList.sortBy { it.country }
+                    Log.i(TAG, "onResponse: Adding to adapter")
+                    casesAdapter = CasesAdapter(casesList, context)
 
-                    casesAdapter = CasesAdapter(casesList, activity?.applicationContext)
-
-                    recyclerView.layoutManager = layoutManager
+                    Log.i(TAG, "onResponse: attaching adapter")
                     recyclerView.adapter = casesAdapter
                 } else {
                     response.raw().body?.close()

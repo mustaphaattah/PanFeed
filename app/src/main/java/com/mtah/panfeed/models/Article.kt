@@ -1,30 +1,45 @@
 package com.mtah.panfeed.models
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
+@Entity(tableName = "news_table")
 data class Article (
 
-    @SerializedName("source")
-    var source: Source,
-
-     @SerializedName("author")
-    var author: String,
-
-     @SerializedName("title")
+    @SerializedName("title")
     var title: String,
 
-     @SerializedName("description")
-    var description: String,
-
-     @SerializedName("url")
+    @SerializedName("url")
     var url: String,
 
-     @SerializedName("urlToImage")
+    @SerializedName("urlToImage")
     var urlToImage: String,
 
-     @SerializedName("publishedAt")
-    var publishedAt: String,
+    @SerializedName("publishedAt")
+    var publishedAt: String
 
-     @SerializedName("content")
-    var content: String
-)
+) {
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+
+    @Ignore
+    @SerializedName("source")
+    lateinit var source: Source
+
+    @Ignore
+    @SerializedName("author")
+    lateinit var author: String
+
+    @Ignore
+    @SerializedName("description")
+    lateinit var description: String
+
+    @Ignore
+    @SerializedName("content")
+    lateinit var content: String
+
+}

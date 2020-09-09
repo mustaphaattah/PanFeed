@@ -10,18 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blongho.country_data.World
 import com.mtah.panfeed.R
 import com.mtah.panfeed.models.Country
-import java.util.*
-import kotlin.collections.ArrayList
 
 class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
     val TAG = "CasesAdapter"
-    val fullCasesList = cases.toList()
+    var fullCasesList = cases
 
     init {
         World.init(context)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaseViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.case_card, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_case, parent, false)
         return CaseViewHolder(view)
     }
 
@@ -55,6 +53,11 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
 
     override fun getFilter(): Filter {
         return filter
+    }
+
+    fun setCaseList(casesList: MutableList<Country>) {
+        fullCasesList = casesList
+        notifyDataSetChanged()
     }
 
     private var filter  = object : Filter() {
