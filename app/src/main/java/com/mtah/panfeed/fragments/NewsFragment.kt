@@ -47,7 +47,7 @@ class NewsFragment : Fragment() {
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                var position = tab?.position
+                val position = tab?.position
                 if (position != null) {
                     viewPager.currentItem = position
                     currentFragment = viewPager.currentItem
@@ -57,7 +57,7 @@ class NewsFragment : Fragment() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                var position = tab?.position
+                val position = tab?.position
                 if (position != null) {
                     viewPager.currentItem = position
                     currentFragment = viewPager.currentItem

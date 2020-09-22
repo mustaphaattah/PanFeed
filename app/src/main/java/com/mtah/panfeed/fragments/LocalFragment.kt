@@ -71,8 +71,7 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         call.enqueue(object : Callback<News> {
             override fun onFailure(call: Call<News>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
-                Toast.makeText(activity, "Unable to get Local news", Toast.LENGTH_SHORT)
-                Log.e(TAG, "Unable to get Local news")
+                Toast.makeText(activity, "Unable to get Local news.", Toast.LENGTH_SHORT)
                 Log.e(TAG, "Error: ${t.message}")
             }
 

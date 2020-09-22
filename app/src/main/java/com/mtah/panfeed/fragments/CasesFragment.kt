@@ -72,8 +72,8 @@ class CasesFragment : Fragment() {
         call.enqueue(object : Callback<MutableList<Country>> {
             override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
-                Toast.makeText(context, "${t.message}", Toast.LENGTH_SHORT).show()
-                Log.i(TAG, "get request FAILED")
+                Toast.makeText(context, "Unable to get cases", Toast.LENGTH_SHORT).show()
+                Log.i(TAG, "Unable to get cases")
                 t.printStackTrace()
             }
 
@@ -86,10 +86,8 @@ class CasesFragment : Fragment() {
                     //remove null last update case in response array
                     casesList.removeAt(casesList.size - 1)
                     casesList.sortBy { it.country }
-                    Log.i(TAG, "onResponse: Adding to adapter")
                     casesAdapter = CasesAdapter(casesList, context)
 
-                    Log.i(TAG, "onResponse: attaching adapter")
                     recyclerView.adapter = casesAdapter
                 } else {
                     response.raw().body?.close()

@@ -68,19 +68,17 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         val call = request.getAllCovidNews(APIKEY, COVIDKEYWORD, lang, PAGESIZE, SORT_BY)
         Log.d(TAG, "news language $lang")
 
-        Log.d(TAG, "Sending requests...")
         call.enqueue(object : Callback<News> {
             override fun onFailure(call: Call<News>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
                 Log.e(TAG, "Response Failure")
-                Toast.makeText(activity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Unable to get Global news.", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, t.message!!)
             }
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful) {
-                    Log.d(TAG, "onResponse successful: Showing articles")
                     articles = (response.body()!!.articles as ArrayList<Article>)
 //                    filtering out daily mail articles
                     newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "dailymail" })
