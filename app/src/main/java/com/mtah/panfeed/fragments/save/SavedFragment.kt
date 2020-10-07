@@ -1,4 +1,4 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.save
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,10 +17,9 @@ import com.mtah.panfeed.MainActivity
 
 import com.mtah.panfeed.R
 import com.mtah.panfeed.ReadActivity
-import com.mtah.panfeed.SavedViewModel
 import com.mtah.panfeed.adapters.SavedNewsAdapter
 import com.mtah.panfeed.models.Article
-import kotlin.math.log
+import kotlinx.android.synthetic.main.fragment_saved.view.*
 
 
 class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
@@ -43,12 +42,18 @@ class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
         savedNewsAdapter = SavedNewsAdapter(this)
         savedNewsRecyclerView.adapter = savedNewsAdapter
 
-        emptySaveTextView = view.findViewById(R.id.saveEmptyText)
 
 
         savedViewModel = ViewModelProvider(requireActivity()).get(SavedViewModel::class.java)
         savedViewModel.getAll().observe(viewLifecycleOwner, { news ->
-            emptySaveTextView.visibility = if (news.isNotEmpty()) View.GONE else View.VISIBLE
+            if (news.isNotEmpty()) {
+                view.noDataTextView.visibility = View.INVISIBLE
+                view.noDataImageView.visibility = View.INVISIBLE
+            } else {
+                view.noDataTextView.visibility = View.VISIBLE
+                view.noDataImageView.visibility = View.VISIBLE
+            }
+
             savedNewsList = news as MutableList<Article>
             savedNewsAdapter.setNewsList(savedNewsList)
         })
@@ -125,6 +130,5 @@ class SavedFragment : Fragment(), SavedNewsAdapter.OnSavedNewsClickListener {
                  Log.i(TAG, "removeArticle: Delete Undone")
          }.show()
      }
-
 
  }

@@ -1,4 +1,4 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.news
 
 import android.content.Intent
 import android.os.Bundle
@@ -81,7 +81,7 @@ class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 if (response.isSuccessful) {
                     articles = (response.body()!!.articles as ArrayList<Article>)
 //                    filtering out daily mail articles
-                    newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "dailymail" })
+                    newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "daily mail" })
 
                     val newsCount = newsAdapter.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")

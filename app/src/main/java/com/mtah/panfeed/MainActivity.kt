@@ -11,9 +11,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
-import com.mtah.panfeed.fragments.CasesFragment
-import com.mtah.panfeed.fragments.NewsFragment
-import com.mtah.panfeed.fragments.SavedFragment
+import com.mtah.panfeed.fragments.cases.CasesFragment
+import com.mtah.panfeed.fragments.news.NewsFragment
+import com.mtah.panfeed.fragments.save.SavedFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

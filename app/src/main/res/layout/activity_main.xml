@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:layout_above="@id/bottom_navigation"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            ads:adUnitId="ca-app-pub-1484974828745735/8232378540">
     </com.google.android.gms.ads.AdView>
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"

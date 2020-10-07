@@ -1,4 +1,4 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.news
 
 import android.content.Intent
 import android.os.Bundle
@@ -91,7 +91,6 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
                 else {
                     response.raw().body?.close()
                 }
-//                response.raw().body?.close()
             }
 
         })

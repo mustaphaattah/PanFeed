@@ -1,4 +1,4 @@
-package com.mtah.panfeed
+package com.mtah.panfeed.fragments.save
 
 import android.app.Application
 import android.util.Log
@@ -20,7 +20,7 @@ class SavedViewModel(application: Application): AndroidViewModel(application) {
     init {
         val newsDao = NewsDatabase.getInstance(application).savedNewsDao()
         repository = NewsRepository(newsDao)
-        savedNews = repository.getAll()
+        savedNews = repository.savedNews
     }
 
     fun insert(article: Article) = viewModelScope.launch(Dispatchers.IO){

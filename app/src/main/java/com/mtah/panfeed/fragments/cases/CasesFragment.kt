@@ -1,5 +1,6 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.cases
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blongho.country_data.World
+import com.mtah.panfeed.MainActivity
 import com.mtah.panfeed.R
+import com.mtah.panfeed.ReadActivity
 import com.mtah.panfeed.adapters.CasesAdapter
 import com.mtah.panfeed.api.CasesInterface
 import com.mtah.panfeed.api.Covid19ApiClient
@@ -19,8 +22,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CasesFragment : Fragment() {
+class CasesFragment : Fragment(), CasesAdapter.OnCaseClickListener {
 
+    private val CASES_URL = "https://www.worldometers.info/coronavirus/country/"
     private val TAG = "CasesFragment"
 
     private lateinit var casesAdapter: CasesAdapter
@@ -37,7 +41,7 @@ class CasesFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.casesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        casesAdapter = CasesAdapter(mutableListOf(), context)
+        casesAdapter = CasesAdapter(mutableListOf(), context, this)
         recyclerView.adapter = casesAdapter
 
         swipeRefresh = view.findViewById(R.id.casesRefresh)
@@ -86,7 +90,7 @@ class CasesFragment : Fragment() {
                     //remove null last update case in response array
                     casesList.removeAt(casesList.size - 1)
                     casesList.sortBy { it.country }
-                    casesAdapter = CasesAdapter(casesList, context)
+                    casesAdapter.setCaseList(casesList)
 
                     recyclerView.adapter = casesAdapter
                 } else {
@@ -96,6 +100,16 @@ class CasesFragment : Fragment() {
         })
     }
 
+    override fun onItemClick(countryCase: Country) {
+        val countryName = countryCase.country.trim().replace(" ", "-")
+        val url = CASES_URL + countryName
+        val readIntent = Intent(context, ReadActivity::class.java)
+        readIntent.putExtra(MainActivity.EXTRA_TITLE, countryCase.country)
+        readIntent.putExtra(MainActivity.EXTRA_URL, url)
+
+        Log.i(TAG, "onItemClick: Opening $url")
+        startActivity(readIntent)
+    }
 
 
 }

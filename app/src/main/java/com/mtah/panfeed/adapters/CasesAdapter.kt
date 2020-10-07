@@ -9,9 +9,12 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.blongho.country_data.World
 import com.mtah.panfeed.R
+import com.mtah.panfeed.models.Article
 import com.mtah.panfeed.models.Country
 
-class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
+class CasesAdapter(var cases: MutableList<Country>,
+                   val context: Context?,
+                   private val clickListener: OnCaseClickListener) : RecyclerView.Adapter<CasesAdapter.CaseViewHolder>(), Filterable {
     val TAG = "CasesAdapter"
     var fullCasesList = cases
 
@@ -28,7 +31,7 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
     }
 
     override fun onBindViewHolder(holder: CaseViewHolder, position: Int) {
-        holder.bind(cases[position])
+        holder.bind(cases[position], clickListener)
     }
 
     class CaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -38,7 +41,7 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
         private val deathsNumber: TextView = itemView.findViewById(R.id.deathNumber)
         private val countryFlag: ImageView = itemView.findViewById(R.id.flagImageView)
 
-        fun bind(countryCase: Country) {
+        fun bind(countryCase: Country, onClick: OnCaseClickListener) {
             val countryName = countryCase.country
             caseName.text = countryName
 
@@ -48,6 +51,10 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
             confirmedNumber.text = if (countryCase.cases.isNotBlank()) countryCase.cases else "N/A"
             recoveredNumber.text = if (countryCase.recovered.isNotBlank()) countryCase.recovered else "N/A"
             deathsNumber.text = if (countryCase.deaths.isNotBlank()) countryCase.deaths else "N/A"
+
+            itemView.setOnClickListener {
+                onClick.onItemClick(countryCase)
+            }
         }
     }
 
@@ -56,7 +63,7 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
     }
 
     fun setCaseList(casesList: MutableList<Country>) {
-        fullCasesList = casesList
+        this.cases = casesList
         notifyDataSetChanged()
     }
 
@@ -85,9 +92,10 @@ class CasesAdapter(var cases: MutableList<Country>, val context: Context?) : Rec
                 arrayListOf()
             } else results.values as MutableList<Country>
             notifyDataSetChanged()
-//            Toast.makeText(context, "No resutls", Toast.LENGTH_SHORT).show()
         }
-
     }
 
+    interface OnCaseClickListener {
+        fun onItemClick(countryCase: Country)
+    }
 }

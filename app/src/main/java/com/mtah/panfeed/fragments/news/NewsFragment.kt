@@ -1,18 +1,18 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.news
 
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyCharacterMap
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
 import com.mtah.panfeed.R
 import com.mtah.panfeed.adapters.PagerAdapter
+import com.mtah.panfeed.fragments.news.GlobalFragment
+import com.mtah.panfeed.fragments.news.LocalFragment
 
 class NewsFragment : Fragment() {
 
