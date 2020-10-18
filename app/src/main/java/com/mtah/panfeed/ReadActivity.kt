@@ -135,7 +135,7 @@ class ReadActivity : AppCompatActivity() {
             savedViewModel.insert(displayArticle!!)
             Toast.makeText(this, "Article saved", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Cannot save this article", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cannot save this", Toast.LENGTH_SHORT).show()
         }
     }
 

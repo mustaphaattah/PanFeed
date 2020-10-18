@@ -17,20 +17,23 @@ import com.mtah.panfeed.ReadActivity
 import com.mtah.panfeed.adapters.CasesAdapter
 import com.mtah.panfeed.api.CasesInterface
 import com.mtah.panfeed.api.Covid19ApiClient
-import com.mtah.panfeed.models.Country
+import com.mtah.panfeed.models.Case
+import com.mtah.panfeed.models.Stats
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class CasesFragment : Fragment(), CasesAdapter.OnCaseClickListener {
 
-    private val CASES_URL = "https://www.worldometers.info/coronavirus/country/"
+    private val caseUrl = "https://www.worldometers.info/coronavirus/country/"
+    private val flagUrl = "https://www.countries-ofthe-world.com/flags-normal/flag-of-"
+    private val imageType = ".png"
     private val TAG = "CasesFragment"
 
     private lateinit var casesAdapter: CasesAdapter
     private lateinit var recyclerView: RecyclerView
     lateinit var swipeRefresh: SwipeRefreshLayout
-    lateinit var counrtySearchView: SearchView
+    private lateinit var countrySearchView: SearchView
 
 
     override fun onCreateView(
@@ -41,7 +44,7 @@ class CasesFragment : Fragment(), CasesAdapter.OnCaseClickListener {
 
         recyclerView = view.findViewById(R.id.casesRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        casesAdapter = CasesAdapter(mutableListOf(), context, this)
+        casesAdapter = CasesAdapter(context, this)
         recyclerView.adapter = casesAdapter
 
         swipeRefresh = view.findViewById(R.id.casesRefresh)
@@ -49,9 +52,9 @@ class CasesFragment : Fragment(), CasesAdapter.OnCaseClickListener {
 
         World.init(context)
 
-
-        counrtySearchView = view.findViewById(R.id.countrySearch)
-        counrtySearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        //filter search for countries
+        countrySearchView = view.findViewById(R.id.countrySearch)
+        countrySearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -67,45 +70,50 @@ class CasesFragment : Fragment(), CasesAdapter.OnCaseClickListener {
         return view
     }
 
+    //fetch all cases from api
     private fun fetchAllCases(){
         Log.i(TAG, "Making get request...")
         swipeRefresh.isRefreshing = true
         val requests = Covid19ApiClient.getApi(CasesInterface::class.java)
         val call = requests.getAllCases()
 
-        call.enqueue(object : Callback<MutableList<Country>> {
-            override fun onFailure(call: Call<MutableList<Country>>, t: Throwable) {
-                swipeRefresh.isRefreshing = false
-                Toast.makeText(context, "Unable to get cases", Toast.LENGTH_SHORT).show()
-                Log.i(TAG, "Unable to get cases")
-                t.printStackTrace()
-            }
+        call.enqueue(object : Callback<Stats> {
+            override fun onResponse(call: Call<Stats>, response: Response<Stats>) {
 
-            override fun onResponse(call: Call<MutableList<Country>>, response: Response<MutableList<Country>>) {
                 swipeRefresh.isRefreshing = false
                 if (response.isSuccessful) {
-                    val casesList = response.body()!!
+                    if (response.body()?.results == null) {
+                        val caseList = response.body()?.results
+                        caseList?.forEach { Log.i(TAG, "Case: $it") }
+                        Toast.makeText(requireContext(), "Null response body", Toast.LENGTH_SHORT).show()
+                        Log.i(TAG, "Null response body")
+                    } else {
 
-                    Log.i(TAG, "onResponse: got ${casesList.size} cases")
-                    //remove null last update case in response array
-                    casesList.removeAt(casesList.size - 1)
-                    casesList.sortBy { it.country }
-                    casesAdapter.setCaseList(casesList)
-
-                    recyclerView.adapter = casesAdapter
+                        val caseList = response.body()?.results as MutableList<Case>
+                        caseList.sortBy { it.country }
+                        casesAdapter.setCaseList(caseList)
+                    }
                 } else {
-                    response.raw().body?.close()
+                    Toast.makeText(requireContext(), "Could not get cases.", Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "onResponse: not successful")
                 }
+            }
+
+            override fun onFailure(call: Call<Stats>, t: Throwable) {
+                Toast.makeText(requireContext(), "Unable to get cases", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
             }
         })
     }
 
-    override fun onItemClick(countryCase: Country) {
+    override fun onItemClick(countryCase: Case) {
         val countryName = countryCase.country.trim().replace(" ", "-")
-        val url = CASES_URL + countryName
+        val url = caseUrl + countryName
         val readIntent = Intent(context, ReadActivity::class.java)
         readIntent.putExtra(MainActivity.EXTRA_TITLE, countryCase.country)
         readIntent.putExtra(MainActivity.EXTRA_URL, url)
+        val imageUrl = flagUrl + countryCase.country.trim() + imageType
+        readIntent.putExtra(MainActivity.EXTRA_IMAGE_URL, imageUrl)
 
         Log.i(TAG, "onItemClick: Opening $url")
         startActivity(readIntent)
