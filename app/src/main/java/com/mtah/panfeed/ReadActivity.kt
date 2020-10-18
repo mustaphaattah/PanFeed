@@ -108,9 +108,7 @@ class ReadActivity : AppCompatActivity() {
         }
 
         if (newsIntent.hasExtra(MainActivity.EXTRA_URL)) {
-            newsWebView.settings.loadsImagesAutomatically = false
-            newsWebView.settings.blockNetworkImage = true
-            newsWebView.settings.domStorageEnabled = false
+//            newsWebView.settings.loadsImagesAutomatically = false
             newsWebView.webViewClient = WebViewClient()
             newsUrl = newsIntent.getStringExtra(MainActivity.EXTRA_URL)!!
             newsWebView.loadUrl(newsUrl)
