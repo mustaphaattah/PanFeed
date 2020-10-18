@@ -48,14 +48,19 @@ class ReadActivity : AppCompatActivity() {
         newsProgressBar.visibility = View.VISIBLE
 
         newsIntent = intent
-        if (newsIntent.hasExtra(MainActivity.EXTRA_TITLE) && newsIntent.hasExtra(MainActivity.EXTRA_URL) &&
-            newsIntent.hasExtra(MainActivity.EXTRA_IMAGE_URL) && newsIntent.hasExtra(MainActivity.EXTRA_DATE)){
-            displayArticle = Article(
-                newsIntent.getStringExtra(MainActivity.EXTRA_TITLE)!!,
-                newsIntent.getStringExtra(MainActivity.EXTRA_URL)!!,
-                newsIntent.getStringExtra(MainActivity.EXTRA_IMAGE_URL)!!,
-                newsIntent.getStringExtra(MainActivity.EXTRA_DATE)!!
-            )
+        if ( newsIntent.hasExtra(MainActivity.EXTRA_TITLE)
+            && newsIntent.hasExtra(MainActivity.EXTRA_URL)
+            && newsIntent.hasExtra(MainActivity.EXTRA_IMAGE_URL) ){
+
+            if (newsIntent.hasExtra(MainActivity.EXTRA_DATE)) {
+                displayArticle = Article(
+                    newsIntent.getStringExtra(MainActivity.EXTRA_TITLE)!!,
+                    newsIntent.getStringExtra(MainActivity.EXTRA_URL)!!,
+                    newsIntent.getStringExtra(MainActivity.EXTRA_IMAGE_URL)!!,
+                    newsIntent.getStringExtra(MainActivity.EXTRA_DATE)!!
+                )
+            }
+
         } else {
             Toast.makeText(this, "Cannot get Article", Toast.LENGTH_SHORT).show()
         }
