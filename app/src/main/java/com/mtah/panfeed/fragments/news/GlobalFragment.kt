@@ -1,12 +1,10 @@
-package com.mtah.panfeed.fragments
+package com.mtah.panfeed.fragments.news
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,83 +21,83 @@ import com.mtah.panfeed.models.News
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
-class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
+class GlobalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
 
-    val API_KEY = BuildConfig.api_key
-    val TAG = "LocalFragment"
-    val CATEGORY = "health"
-    val PAGE_SIZE = 100
-    //val  EXTRA_ARTICLE = "com.mtah.panfeed.fragments.EXTRA_ARTICLE"
-
-    lateinit var recyclerView: RecyclerView
-    lateinit var swipeRefresh: SwipeRefreshLayout
-    lateinit var newsAdapter: NewsAdapter
+    private val APIKEY = BuildConfig.api_key
+    private val TAG = "GlobalFragment"
+    private val COVIDKEYWORD = "coronavirus"
+    private val SORT_BY = "publishedAt"
+    private val PAGESIZE = 100
     var articles = arrayListOf<Article>()
+
+    private lateinit var newsAdapter: NewsAdapter
+    private lateinit var recyclerView: RecyclerView
+    lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_local, container, false)
+        val view =  inflater.inflate(R.layout.fragment_global, container, false)
 
-
-        recyclerView = view.findViewById(R.id.localRecyclerView)
+        recyclerView = view.findViewById(R.id.globalRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        newsAdapter = NewsAdapter( articles, this)
+        newsAdapter = NewsAdapter(mutableListOf(), this)
         recyclerView.adapter = newsAdapter
 
-        swipeRefresh = view.findViewById(R.id.localSwipeRefresh)
-        swipeRefresh.setOnRefreshListener { fetchLocalNews() }
+        swipeRefresh = view.findViewById(R.id.globalRefresh)
+        swipeRefresh.setOnRefreshListener { fetchNews() }
 
-        fetchLocalNews()
+        fetchNews()
 
         return view
     }
 
 
-    private fun fetchLocalNews(){
+
+    private fun fetchNews(){
         swipeRefresh.isRefreshing = true
-        val request =
-            NewsApiClient.getApi(NewsInterface::class.java)
-        val country = getCountryCode()
-        val call = request.getLocalNews(API_KEY, country, CATEGORY, PAGE_SIZE)
-        Log.d(TAG, "the locale code: $country")
+        Log.d(TAG, "fetching News")
+        val request = NewsApiClient.getApi(NewsInterface::class.java)
+        val lang = getLanguage()
+        val call = request.getAllCovidNews(APIKEY, COVIDKEYWORD, lang, PAGESIZE, SORT_BY)
+        Log.d(TAG, "news language $lang")
 
         call.enqueue(object : Callback<News> {
             override fun onFailure(call: Call<News>, t: Throwable) {
                 swipeRefresh.isRefreshing = false
-                Toast.makeText(activity, "Unable to get Local news", Toast.LENGTH_SHORT)
-                Log.e(TAG, "Unable to get Local news")
-                Log.e(TAG, "Error: ${t.message}")
+                Log.e(TAG, "Response Failure")
+                Toast.makeText(activity, "Unable to get Global news.", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, t.message!!)
             }
 
             override fun onResponse(call: Call<News>, response: Response<News>) {
                 swipeRefresh.isRefreshing = false
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
+                    articles = (response.body()!!.articles as ArrayList<Article>)
+//                    filtering out daily mail articles
+                    newsAdapter.addAllArticles(articles.filterNot { it.source.name.toLowerCase() == "daily mail" })
 
-                    articles = response.body()!!.articles as ArrayList<Article>
-                    newsAdapter.addAllArticles(articles)
-
-
-                    val newsCount = recyclerView.adapter!!.itemCount
+                    val newsCount = newsAdapter.itemCount
                     Log.d(TAG, "onResponse successful:  Done! got $newsCount articles")
                     if (newsCount == 0)
-                        Toast.makeText(activity, "No Local news to show", Toast.LENGTH_LONG)
+                        Toast.makeText(activity, "No Global news to show", Toast.LENGTH_LONG)
                 }
                 else {
                     response.raw().body?.close()
                 }
-//                response.raw().body?.close()
             }
-
         })
+
     }
 
-    private fun getCountryCode(): String {
-        return resources.configuration.locales[0].country.toLowerCase()
+    private fun getLanguage() : String{
+        return Locale.getDefault().language
     }
 
     override fun onItemClick(article: Article) {
@@ -112,5 +110,4 @@ class LocalFragment : Fragment(), NewsAdapter.OnNewsClickListener {
         Log.i(TAG, "onItemClick: Opening ${article.url}")
         startActivity(readIntent)
     }
-
 }

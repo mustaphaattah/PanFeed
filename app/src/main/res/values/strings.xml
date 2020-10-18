@@ -29,4 +29,9 @@
     <string name="empty_save_text">No Saved Articles</string>
     <string name="delete_all_text">Delete All</string>
 
+    <string name="test_ads_banner">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="test_ads_native_advanced">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="no_data_icon">No data icon</string>
+
+
 </resources>

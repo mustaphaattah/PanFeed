@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.mtah.panfeed.api.GlideApp
+import com.mtah.panfeed.fragments.save.SavedViewModel
 import com.mtah.panfeed.models.Article
 
 class ReadActivity : AppCompatActivity() {
@@ -134,7 +135,7 @@ class ReadActivity : AppCompatActivity() {
             savedViewModel.insert(displayArticle!!)
             Toast.makeText(this, "Article saved", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Cannot save this article", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cannot save this", Toast.LENGTH_SHORT).show()
         }
     }
 
