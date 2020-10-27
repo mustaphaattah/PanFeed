@@ -1,7 +1,17 @@
 # PanFeed
 
-News app for the covid19 pandemic using newsapi.org
-* Showing global and local pandemic news
+News app for the covid19 pandemic written in kotlin using newsApi built with android architecture components.
+- Tech stack= Kotlin, MVVM, ViewModel, Coroutines, Retrofit, Room, LiveData, Glide.
+
+* Stay up to date with global and local pandemic news
+* Statistics from countries around the world
+* Save and share news articles from reputable news sources
+
+<a href="https://play.google.com/store/apps/details?id=com.mtah.panfeed" target="_blank">
+  <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="90"/>
+</a>
+
+
 
 | Global | Local |
 | ------ | ----- |
