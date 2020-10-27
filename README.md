@@ -1,7 +1,7 @@
 # PanFeed
 
 News app for the covid19 pandemic written in kotlin using newsApi built with android architecture components.
-- Tech stack= Kotlin, MVVM, ViewModel, Coroutines, Retrofit, Room, LiveData, Glide.
+- Tech stack= Kotlin, MVVM, ViewModel, Coroutines, Retrofit, Okhttp, Room, LiveData, Glide.
 
 * Stay up to date with global and local pandemic news
 * Statistics from countries around the world
